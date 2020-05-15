@@ -17,40 +17,35 @@ Project Pitch
 
 -   Audience
 
--   UW students seeking love
+    -   UW students seeking love
 
 -   Problem
 
--   Finding love is hard, especially when you love staying in or are forced to stay in. Online dating apps are full of catfishes, stalkers, and people with bad intentions. Many times what we see online isn't reflective of what the other person is truly like.
+    -   Finding love is hard, especially when you love staying in or are forced to stay in. Online dating apps are full of catfishes, stalkers, and people with bad intentions. Many times what we see online isn't reflective of what the other person is truly like.
 
 -   Solution
 
--   Our platform will ensure that people are who they say they are by validating their accounts with an UW email, and also connect people with others via video chatting who would likely be relatively nearby because they would all attend the same school.
+    -   Our platform will ensure that people are who they say they are by validating their accounts with an UW email, and also connect people with others via video chatting who would likely be relatively nearby because they would all attend the same school.
 
 -   THE PROFILE
 
--   Name, Age, Year, Major (or intended), Pronouns, Short bio (100 characters max), Picture (1 or 2), Favorite Restaurant on the Ave*, Available times
+    -   Name, Age, Year, Major (or intended), Pronouns, Short bio (100 characters max), Picture (1 or 2), Favorite Restaurant on the Ave*, Available times
 
 -   THE CALLS
 
--   7 minutes video chat (can be ended at any point)
+    -   7 minutes video chat (can be ended at any point)
 
--   Chat opens at the 5 minute mark
+    -   At the end of the 7 minutes, they get to pick yes or no, if both pick yes then they get each other's contact information
 
--   At the end of the 7 minutes, they get to pick yes or no, if both pick yes then they can continue the video chat (until they hang up? lol)
+    -   If no, then unmatched
 
--   If no, then unmatched
-
--   The end
-
--   If yes, the chat window remains open for another 5 minutes if they want to continue chatting
+    -   The end
+    
 
 Technical Description
 ---------------------
 
--   RestAPI
-
-    -   Logged out - Sign Up (Only one that doesn't require authentication. Every other endpoint throws 401 Unauthorized if not authenticated)
+-   Logged out - Sign Up (Only one that doesn't require authentication. Every other endpoint throws 401 Unauthorized if not authenticated)
 
       -   /v1/users
 
@@ -64,205 +59,205 @@ Technical Description
 
             -   500 - Internal Server Error
 
-  -   Logged In - Matches
+-   Logged In - Matches
 
--   /v1/matches
+    -   /v1/matches
 
--   GET
+        -   GET
 
--   200 - Return the three profiles you should see on your homepage each day.
+            -   200 - Return the three profiles you should see on your homepage each day.
 
--   Content Type: Application/JSON
+                -   Content Type: Application/JSON
 
--   Each profile encoded as user JSON object
+            -   Each profile encoded as user JSON object
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
--   /v1/matches/{id}
+    -   /v1/matches/{id}
 
--   DELETE (auto delete after 24 hours, cron job)
+        -   DELETE (auto delete after 24 hours, cron job)
 
--   200 - Deleted match ("disliked")
+            -   200 - Deleted match ("disliked")
 
--   401 - Not Authorized
+            -   401 - Not Authorized
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
 -   User Profile
 
--   /v1/profile
+    -   /v1/profile
 
--   GET
+        -   GET
 
--   200 - Return your own profile information
+            -   200 - Return your own profile information
 
--   Content Type: Application/JSON
+                -   Content Type: Application/JSON
 
--   Profile encoded as User JSON object
+                -   Profile encoded as User JSON object
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
--   PATCH
+        -   PATCH
 
--   200 - Updated new profile information
+            -   200 - Updated new profile information
 
--   Content Type: Application/JSON
+                -   Content Type: Application/JSON
 
--   Updated Profile encoded as user JSON object
+                -   Updated Profile encoded as user JSON object
 
--   DELETE
+        -   DELETE
 
--   200 - Deleted User profile and logged out
+            -   200 - Deleted User profile and logged out
 
--   401 - Not Authorized
+            -   401 - Not Authorized
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
--   /v1/profile/{id}
+    -   /v1/profile/{id}
 
--   GET
+        -   GET
 
--   200 - Return profile information
+            -   200 - Return profile information
 
--   Content Type: Application/JSON
+                -   Content Type: Application/JSON
 
--   Profile encoded as User JSON object
+                -   Profile encoded as User JSON object
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
 -   Chat Room
 
--   /v1/chatroom
+    -   /v1/chatroom
 
--   POST
+        -   POST
 
--   201 - New Chat room is created on the platform
+            -   201 - New Chat room is created on the platform
 
--   Content Type: Application/JSON
+                -   Content Type: Application/JSON
 
--   415 - Content Type if header does not start with Application/JSON
+            -   415 - Content Type if header does not start with Application/JSON
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
--   /v1/chatroom/{id}
+    -   /v1/chatroom/{id}
 
--   GET
+        -   GET
 
--   200 - Get Chat Room Information
+            -   200 - Get Chat Room Information
 
--   403 - Do not have access to this chat room
+            -   403 - Do not have access to this chat room
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
--   Chat room doesn't exist
+    -   Chat room doesn't exist
 
--   DELETE
+        -   DELETE
 
--   200 - Deleted Chat Room
+            -   200 - Deleted Chat Room
 
--   403 - Do not have access to this chat room
+            -   403 - Do not have access to this chat room
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
 -   Not in a Chat room
 
--   /v1/chatroom/invite
+    -   /v1/chatroom/invite
 
--   POST
+        -   POST
 
--   201 - Created Chat Room Invite
+            -   201 - Created Chat Room Invite
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
--   Not currently in a chat room
+                -   Not currently in a chat room
 
--   GET
+        -   GET
 
--   200 - Get Current Pending Chat Room invites
+            -   200 - Get Current Pending Chat Room invites
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
 -   Send Message 
 
--   /v1/message/send
+    -   /v1/message/send
 
--   POST
+        -   POST
 
--   201 - Sent Message
+            -   201 - Sent Message
 
--   Content Type: Application/JSON
+                -   Content Type: Application/JSON
 
--   Encoded as Message JSON object
+                -   Encoded as Message JSON object
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
 -   Get Messages 
 
--   /v1/messages
+    -   /v1/messages
 
--   GET
+        -   GET
 
--   200 - Got all messages
+            -   200 - Got all messages
 
--   Content Type: Application/JSON
+                -   Content Type: Application/JSON
 
--   Encoded Message JSON objects
+                -   Encoded Message JSON objects
 
--   500 - Internal Server Error
+        -   500 - Internal Server Error
 
 -   Sessions
 
--   /v1/sessions
+    -   /v1/sessions
 
--   POST
+        -   POST
 
--   201 - New session created
+            -   201 - New session created
 
--   401 - Invalid Credentials
+            -   401 - Invalid Credentials
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
--   /v1/sessions/{id}
+    -   /v1/sessions/{id}
 
--   DELETE
+        -   DELETE
 
--   200 - Session ended (logged out)
+            -   200 - Session ended (logged out)
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
 -   Admin
 
--   /v1/admin/matches
+    -   /v1/admin/matches
 
--   POST
+        -   POST
 
--   201 - New matches populated
+            -   201 - New matches populated
 
--   401 - Unauthorized
+            -   401 - Unauthorized
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
--   Cron Job (Repeat this call at a time every day)
+            -   Cron Job (Repeat this call at a time every day)
 
--   Run every day at 9am
+                -   Run every day at 9am
 
--   0 9 * * * <command-to-execute>
+                -   0 9 * * * <command-to-execute>
 
--   Resource: <https://www.ostechnix.com/a-beginners-guide-to-cron-jobs/>
+                -   Resource: <https://www.ostechnix.com/a-beginners-guide-to-cron-jobs/>
 
--   Generator: <https://crontab.guru/>
+                -   Generator: <https://crontab.guru/>
 
--   Deploying in Docker: <https://stackoverflow.com/questions/37458287/how-to-run-a-cron-job-inside-a-docker-container>
+                -   Deploying in Docker: <https://stackoverflow.com/questions/37458287/how-to-run-a-cron-job-inside-a-docker-container>
 
--   /v1/admin/profile/{id}
+    -   /v1/admin/profile/{id}
 
--   DELETE
+        -   DELETE
 
--   200 - User deleted
+            -   200 - User deleted
 
--   401 - Unauthorized
+            -   401 - Unauthorized
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
 User Cases and Priority:
 ------------------------
