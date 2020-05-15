@@ -1,10 +1,7 @@
-Project: Dating on the Ave
-==========================
+Link to Google Doc For Readability: https://docs.google.com/document/d/1rjxnJF9NU1zrY1mGaobd65GU0ZK09ixvHteGNNcUoPQ/edit?usp=sharing
 
 Project Description
 -------------------
-
-Link to Google Doc For Readability: https://docs.google.com/document/d/1rjxnJF9NU1zrY1mGaobd65GU0ZK09ixvHteGNNcUoPQ/edit?usp=sharing
 
 As a busy UW student, it can be hard to find time to really spend time looking for love. Each quarter, students spend hours studying for midterms and finals. Not only that, they also have to make time for various group projects and work on dense and difficult homework assignments throughout the quarter. In addition, there might be other priorities and extracurriculars that make it harder to focus on finding the one. However, that is about to change thanks to "Dating on the Ave", an exciting and revolutionary way to make connections with your peers at UW while ensuring you still have time for your other commitments.
 
@@ -53,21 +50,21 @@ Technical Description
 
 -   RestAPI
 
--   Logged out - Sign Up (Only one that doesn't require authentication. Every other endpoint throws 401 Unauthorized if not authenticated)
+    -   Logged out - Sign Up (Only one that doesn't require authentication. Every other endpoint throws 401 Unauthorized if not authenticated)
 
--   /v1/users
+      -   /v1/users
 
--   POST
+          -   POST
 
--   201 - New user is created on the platform
+            -   201 - New user is created on the platform
 
--   Content Type: Application/JSON
+                -   Content Type: Application/JSON
 
--   415 - Content Type if header does not start with Application/JSON
+            -   415 - Content Type if header does not start with Application/JSON
 
--   500 - Internal Server Error
+            -   500 - Internal Server Error
 
--   Logged In - Matches
+  -   Logged In - Matches
 
 -   /v1/matches
 
