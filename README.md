@@ -4,7 +4,7 @@ Project: Dating on the Ave
 Project Description
 -------------------
 
-Link to Google Doc: https://docs.google.com/document/d/1rjxnJF9NU1zrY1mGaobd65GU0ZK09ixvHteGNNcUoPQ/edit?usp=sharing
+Link to Google Doc For Readability: https://docs.google.com/document/d/1rjxnJF9NU1zrY1mGaobd65GU0ZK09ixvHteGNNcUoPQ/edit?usp=sharing
 
 As a busy UW student, it can be hard to find time to really spend time looking for love. Each quarter, students spend hours studying for midterms and finals. Not only that, they also have to make time for various group projects and work on dense and difficult homework assignments throughout the quarter. In addition, there might be other priorities and extracurriculars that make it harder to focus on finding the one. However, that is about to change thanks to "Dating on the Ave", an exciting and revolutionary way to make connections with your peers at UW while ensuring you still have time for your other commitments.
 
