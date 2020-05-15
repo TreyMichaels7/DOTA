@@ -270,97 +270,14 @@ Technical Description
 User Cases and Priority:
 ------------------------
 
-|
-
-Priority
-
- |
-
-User
-
- |
-
-Description
-
- |
-|
-
-P0
-
- |
-
-Unregistered
-
- |
-
-I want to be able to create my own profile and re-login into it.
-
- |
-|
-
-P0
-
- |
-
-Registered
-
- |
-
-I want to be able to make edits to my own profile, or be able to delete my profile if I no longer want to use the application.
-
- |
-|
-
-P0
-
- |
-
-Registered
-
- |
-
-I want to be able to view my matches' profiles while logged into an active session as a user.
-
- |
-|
-
-P1
-
- |
-
-Registered
-
- |
-
-I want to be able to connect with matches I am interested in through video chat, as well as be able to send and retrieve messages in real time.
-
- |
-|
-
-P1
-
- |
-
-Registered
-
- |
-
-I want to be able to send my contact info through the messaging feature, and be able to re-access it later by only the appropriate users.
-
- |
-|
-
-P2
-
- |
-
-Registered
-
- |
-
-Notification System would also be part of a messaging microservice
-
- |
+| Priority | User         | Description                                                                                                                                     |   |   |
+|----------|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---|---|
+| P0       | Unregistered | I want to be able to create my own profile and re-login into it.                                                                                |   |   |
+| P0       | Registered   | I want to be able to make edits to my own profile, or be able to delete my profile if I no longer want to use the application.                  |   |   |
+| P0       | Registered   | I want to be able to view my matches’ profiles while logged into an active session as a user.                                                   |   |   |
+| P1       | Registered   | I want to be able to connect with matches I am interested in through video chat, as well as be able to send and retrieve messages in real time. |   |   |
+| P1       | Registered   | I want to be able to send my contact info through the messaging feature, and be able to re-access it later by only the appropriate users.       |   |   |
+| P2       | Registered   | Notification System would also be part of a messaging microservice                                                                              |   |   |
 
 Architecture Diagram
 --------------------
