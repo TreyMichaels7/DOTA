@@ -1,0 +1,22 @@
+<html>
+
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:80/');
+        socket.on('connect', function (data) {
+            socket.emit('join', 'Hello World from client');
+        });
+
+        // socket.on('disconnect', function (data) {
+        //     socket.emit('join', 'Hello World from client');
+        // });
+    </script>
+</head>
+
+<body>
+    <h1>Hello worlld!</h1>
+    <p>Kelden</p>
+</body>
+
+</html>
