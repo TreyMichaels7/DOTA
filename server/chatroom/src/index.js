@@ -9,7 +9,7 @@ const app = express();
 const httpServer = http.createServer(app);
 const io = socketIO(httpServer);
 
-// Other variables
+// Socket Variables
 let activeSockets = [];
 
 app.use(express.json()); // Parse json only
@@ -23,39 +23,56 @@ httpServer.listen(port, "", () => {
     console.log(`server listening at port ${port}`);
 });
 
+// Socket Connection Handling
 io.on("connection", socket => {
     console.log("Socket connected!");
+
+    // Check if the Socket already exists
     const existingSocket = activeSockets.find(
         existingSocket => existingSocket === socket.id
     );
 
     if (!existingSocket) {
         activeSockets.push(socket.id);
+        socket.emit("get-user-id", { user: socket.id });
 
-        socket.emit("update-user-list", {
-            users: activeSockets.filter(
-                existingSocket => existingSocket !== socket.id
-            )
+        io.emit("update-user-list", {
+            users: activeSockets
         });
 
-        socket.broadcast.emit("update-user-list", {
-            users: [socket.id]
-        });
         console.log("Connected to a new socket: " + socket.id);
-        console.log("Currently Active sockets: " + activeSockets);
-    } else {
-        console.log("Reconnected to previous socket: " + existingSocket);
+        console.log();
     }
 
+    // Calling Socket
+    socket.on("call-user", data => {
+        console.log(socket.id + " is calling " + data.to);
+        socket.to(data.to).emit("call-made", {
+            offer: data.offer,
+            socket: socket.id
+        });
+    });
+
+    socket.on("make-answer", data => {
+        console.log(socket.id + " answering " + data.to + "'s call");
+        socket.to(data.to).emit("answer-made", {
+            socket: socket.id,
+            answer: data.answer
+        });
+    });
+
+    // Disconnecting Sockets
     socket.on("disconnect", () => {
-        console.log(`Socket ${socket.id} Disconnected!`);
         activeSockets = activeSockets.filter(
             existingSocket => existingSocket !== socket.id
         );
 
-        socket.broadcast.emit("remove-user", {
-            socketId: socket.id
-        });
+        io.emit("update-user-list", { users: activeSockets });
+        io.emit("disconnect-call", { user: socket.id });
+
+        console.log(`Socket ${socket.id} Disconnected!`);
+        console.log("Currently Active sockets: " + activeSockets);
+        console.log();
     });
 });
 
