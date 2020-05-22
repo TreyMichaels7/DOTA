@@ -1,38 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
+
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+html {
+  background-color: black;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.landing-main {
+  margin: 100px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  flex-direction: column;
+}
+
+.landing-title {
+  color: white;
+  font-size: 80px;
+  font-family: 'Courgette', cursive;
+}
+
+.landing-subtitle {
+  color: white;
+  font-size: 24px;
+}
+
+.landing-text {
+  margin: 3px;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.landing-links {
+  color: white;
+  text-decoration: none;
+  border: 1px solid white;
+  background-color: grey;
+  padding: 7px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.sign-in-button {
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.sign-up-button {
+  margin: 1em;
+}
+
+.sign-in {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-field {
+  width: 200px;
+  height: 25px;
+}
+
+.register-main {
+  margin: 100px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register-title {
+  color: white;
+  font-size: 24px;
+  font-family: 'Courgette', cursive;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-button-group {
+  margin-top: 1em;
+}
+
+.form-group {
+  margin: 1em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.field-title {
+  color: white;
+  margin-right: 2em;
+}
+
+@media (max-width: 850px) {
+
+  .landing-main {
+    margin-top: 50px;
+    margin-left: 0px;
+    margin-right: 0px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .landing-title {
+    font-size: 40px;
   }
+
+  .landing-subtitle {
+    color: white;
+    font-size: 16px;
+  }
+
 }
