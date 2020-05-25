@@ -96,6 +96,121 @@ html {
   margin-right: 2em;
 }
 
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 2em;
+  height: 40px;
+  background-color: white;
+  vertical-align: center;
+}
+
+.nav-profile-pic {
+  border-radius: 50%;
+  background-color: white;
+  border: 3px solid black;
+  height: 40px;
+  width: 40px;
+}
+
+.nav-home-link {
+  color: black;
+  font-size: 40px;
+  font-family: 'Courgette', cursive;
+  text-decoration: none;
+}
+
+.nav-links {
+  color: black;
+  text-decoration: none;
+}
+
+.expanded {
+  background-color: grey;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  float: right;
+  clear: both;
+}
+
+.hidden {
+  display: none;
+}
+
+.profile-pic {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: white;
+  margin-right: 3em;
+}
+
+.profile-title {
+  margin-left: 2em;
+  margin-right: 2em;
+  font-size: 36px;
+  color: white;
+}
+
+.profile-main {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+}
+
+.profile-text {
+  color: white;
+}
+
+.profile-bio {
+  color: white;
+  margin-left: 4em;
+  margin-left: 4em;
+  margin-bottom: 4em;
+  height: 75px;
+}
+
+.profile-avail {
+  color: white;
+  margin-left: 4em;
+  margin-right: 4em;
+  height: 25px;
+}
+
+.profile-subtitle {
+  font-size: 30px;
+}
+
+.profile-container {
+  width: 80%;
+  margin-left: 4em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-block {
+  display: flex;
+  align-items: center;
+}
+
+.edit-profile {
+
+}
+
+.edit-button {
+  width: 100px;
+  height: 50px;
+  font-size: 20px;
+  background-color: maroon;
+  color: white;
+  border: 1px solid maroon;
+}
+
 @media (max-width: 850px) {
 
   .landing-main {
@@ -113,4 +228,10 @@ html {
     font-size: 16px;
   }
 
+}
+
+@media (max-width: 450px) {
+  .nav-home-link {
+    font-size: 30px;
+  }
 }

@@ -17,16 +17,13 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <header>
-          </header>
           <Switch>
             <Route exact path='/'><LandingPage/></Route>
             <Route path='/home'><HomePage/></Route>
             <Route path='/register'><CreateProfilePage/></Route>
+            <Route path='/profile'><ProfilePage/></Route>
             <Redirect to ='/' />
           </Switch>
-          <footer>
-          </footer>
         </div>
       </Router>
     )
@@ -125,10 +122,94 @@ class CreateProfilePage extends Component {
   }
 }
 
+
 class HomePage extends Component {
   render() {
     return (
-      <div>Hello</div>
+      <div>
+        <header>
+          <NavBar/>
+        </header>
+        <main>
+
+        </main>
+      </div>
+    )
+  }
+}
+
+class ProfilePage extends Component {
+  render() {
+    return (
+      <div>
+        <header>
+          <NavBar/>
+        </header>
+        <main className="profile-main">
+          <div className="profile-block">
+            <h1 className="profile-title">Your Profile</h1>
+            <button className="edit-button">Edit</button>
+          </div>
+          <div className="profile-container">
+            <div className="profile-block">
+              <div className="profile-pic">
+                <img src="" alt=""/>
+              </div>
+              <div className="profile-text">
+                <h2>UserName, 18, M</h2>
+                <p>Studies Computer Science</p>
+                <p>Interested in Females</p>
+                <p>He/Him</p>
+              </div>
+            </div>
+            <div className="edit-profile">
+            </div>
+          </div>
+          <div className="profile-bio">
+            <h2 className="profile-subtitle">Bio:</h2>
+            <p className="profile-text">FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY</p>
+          </div>
+          <div className="profile-avail">
+            <h2 className="profile-subtitle">Availability:</h2>
+            <p className="profile-text">Typically free between 10pm-2am</p>
+          </div>
+        </main>
+      </div>
+    )
+  }
+}
+
+class NavBar extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      expanded: false
+    }
+  }
+
+  expandMenu = () => {
+    this.setState({expanded: !this.state.expanded});
+    console.log(this.state.expanded);
+  }
+
+  render() {
+    return (
+      <nav>
+        <div className="nav-bar">
+          <div>
+            <a className="nav-home-link" href="/home">Dating on the Ave</a>
+          </div>
+          <Button className="nav-profile-pic" onClick={this.expandMenu}>
+            
+          </Button>
+        </div>
+        <div className={this.state.expanded ? "expanded" : "hidden"}>
+          <Link className="nav-links" to="/profile">Edit Profile</Link>
+          <Link className="nav-links" to="/home">Notifications</Link>
+          <Link className="nav-links" to="/">Sign Out</Link>
+        </div>
+      </nav>
     )
   }
 }
