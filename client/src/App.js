@@ -55,6 +55,44 @@ class LandingPage extends Component {
 }
 
 class CreateProfilePage extends Component {
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      major: "",
+      pronouns: "",
+      bio: "",
+      gender: "male",
+      preference: "Men",
+      uploadProfile: "",
+      completed: false
+    }
+  }
+
+  handleChange = (event) => {
+    let val = event.target.value;
+    this.setState({
+        [event.target.name]: val
+    });
+    if (this.state.firstName !== "" && this.state.lastName !== "" && this.state.email !== "" && this.state.password !== "") {
+      this.setState({
+        completed: true
+      })
+    }
+  }
+
+  submitForm = () => {
+    if (this.state.firstName === "" || this.state.lastName === "" || this.state.email === "" || this.state.password === "") {
+      alert("Error! Some required fields were not completed");
+    } else {
+      alert("form submitted!");
+    }
+  }
+
   render() {
     return (
       <main className="register-main">
@@ -62,56 +100,56 @@ class CreateProfilePage extends Component {
         <Form className="register-form">
           <FormGroup className="form-group">
             <Label className="field-title" for="FName">First Name*:</Label>
-            <Input type="text" name="FName" id="FName" className="input-field" placeholder="First Name" />
+            <Input type="text" name="firstName" id="FName" className="input-field" placeholder="First Name" maxLength="128" value={this.state.firstName} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="LName">Last Name*:</Label>
-            <Input type="text" name="LName" id="LName" className="input-field" placeholder="Last Name" />
+            <Input type="text" name="lastName" id="LName" className="input-field" placeholder="Last Name" maxLength="128" value={this.state.lastName} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="exampleEmail">Email*:</Label>
-            <Input type="email" name="email" id="exampleEmail" className="input-field" placeholder="123@uw.edu" />
+            <Input type="email" name="email" id="exampleEmail" className="input-field" placeholder="123@uw.edu" value={this.state.email} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="examplePassword">Password*:</Label>
-            <Input type="password" name="password" id="examplePassword" className="input-field" placeholder="Min 6 Characters" />
+            <Input type="password" name="password" id="examplePassword" className="input-field" placeholder="Min 6 Characters" minLength="6" maxLength="16" value={this.state.password} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="Major">Major/Intended Major:</Label>
-            <Input type="text" name="major" id="major" className="input-field"/>
+            <Input type="text" name="major" id="major" className="input-field" maxLength="128" value={this.state.major} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="pronouns">Pronouns:</Label>
-            <Input type="text" name="pronouns" id="pronouns" className="input-field"/>
+            <Input type="text" name="pronouns" id="pronouns" className="input-field" maxLength="60" value={this.state.pronouns} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="bio">Bio:</Label>
-            <Input type="textarea" name="bio" id="bio" className="input-field" placeholder="Max 300 characters"/>
+            <Input type="textarea" name="bio" id="bio" className="input-field" placeholder="Max 300 characters" maxLength="300" value={this.state.bio} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="Gender">Gender*:</Label>
-            <Input type="select" name="gender" id="gender" className="input-field">
+            <Input type="select" name="gender" id="gender" className="input-field white-field" value={this.state.gender} onChange={this.handleChange}>
               <option>Male</option>
               <option>Female</option>
               <option>Other</option>
             </Input>
           </FormGroup>
           <FormGroup className="form-group">
-            <Label className="field-title" for="interest">Interested In*:</Label>
-            <Input type="select" name="interest" id="interest" className="input-field">
+            <Label className="field-title" for="preference">Interested In*:</Label>
+            <Input type="select" name="preference" id="preference" className="input-field white-field" value={this.state.preference} onChange={this.handleChange}>
               <option>Men</option>
               <option>Women</option>
               <option>Other</option>
             </Input>
           </FormGroup>
           <FormGroup className="form-group">
-            <Label className="field-title" for="exampleFile">Upload Profile</Label>
-            <Input type="file" name="profilePic" id="profilePic" className="input-field"/>
+            <Label className="field-title" for="uploadProfile">Upload Profile</Label>
+            <Input type="file" name="uploadProfile" id="profilePic" className="input-field white-field" value={this.state.uploadProfile} onChange={this.handleChange}/>
           </FormGroup>
         </Form>
         <div className="register-button-group">
           <span className="sign-up-button">
-              <Link className="landing-links" to="/home">Submit</Link>
+              <Link className="landing-links" onClick={this.submitForm} to={this.state.completed ? "/home" : "/register"}>Submit</Link>
           </span>
           <span className="sign-up-button">
               <Link className="landing-links" to="/">Back</Link>
@@ -205,7 +243,7 @@ class NavBar extends Component {
           </Button>
         </div>
         <div className={this.state.expanded ? "expanded" : "hidden"}>
-          <Link className="nav-links" to="/profile">Edit Profile</Link>
+          <Link className="nav-links" to="/profile">Profile</Link>
           <Link className="nav-links" to="/home">Notifications</Link>
           <Link className="nav-links" to="/">Sign Out</Link>
         </div>
