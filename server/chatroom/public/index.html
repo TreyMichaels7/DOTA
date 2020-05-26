@@ -12,7 +12,7 @@
         let activeTracks = [];
 
         // Init
-        var socket = io.connect('http://localhost:80/');
+        var socket = io.connect('https://chatroom.kelden.me/');
 
         // Offer a call to callee
         async function callUser(socketId) {
@@ -103,18 +103,54 @@
         });
 
         // Getting access to the video camera / audio
-        navigator.getUserMedia(
-            { video: true, audio: true },
-            stream => {
-                const localVideo = document.getElementById("local-video");
-                if (localVideo) { localVideo.srcObject = stream; }
+        var constraints = { video: true, audio: true };
 
-                stream.getTracks().forEach(track => {
-                    peerConnection.addTrack(track, stream)
-                });
-            },
-            error => { console.warn(error.message); }
-        );
+        function successCallback(stream) {
+            console.log("Success");
+            const localVideo = document.getElementById("local-video");
+            if (localVideo) { localVideo.srcObject = stream; }
+            localVideo.play();
+
+            stream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, stream)
+            });
+        }
+
+        function errorCallback(error) {
+            console.log("navigator.getUserMedia error: ", error);
+        }
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(successCallback)
+            .catch(errorCallback);
+        // navigator.getUserMedia = (
+        //     navigator.getUserMedia ||
+        //     navigator.webkitGetUserMedia ||
+        //     navigator.mozGetUserMedia ||
+        //     navigator.msGetUserMedia
+        // );
+
+        // if (typeof navigator.mediaDevices.getUserMedia === 'undefined') {
+        //     navigator.getUserMedia(
+
+        //     );
+        // } else {
+        //     navigator.mediaDevices.getUserMedia(
+        //         { video: true, audio: true },
+        //         stream => {
+        //             console.log("defined");
+        //             const localVideo = document.getElementById("local-video");
+        //             if (localVideo) { localVideo.srcObject = stream; }
+
+        //             stream.getTracks().forEach(track => {
+        //                 peerConnection.addTrack(track, stream)
+        //             });
+        //             console.log(stream);
+        //         },
+        //         error => { console.warn(error.message); }
+        //     );
+        // }
+
 
         peerConnection.ontrack = function ({ streams: [stream] }) {
             const remoteVideo = document.getElementById("remote-video");
@@ -162,7 +198,7 @@
             object-fit: cover;
         }
 
-        #remote-container > p {
+        #remote-container>p {
             position: absolute;
             left: 10;
             top: 0;
@@ -176,10 +212,10 @@
             width: 25%;
             max-width: 300px;
             border-radius: 5px;
-            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
         }
 
-        #local-container > p {
+        #local-container>p {
             position: absolute;
             bottom: 0;
             right: 20;

@@ -1,12 +1,19 @@
+const fs = require("fs");
 const express = require('express');
 const path = require('path');
-const http = require("http");
 const socketIO = require("socket.io");
-const port = 80;
+const https = require("https");
+const options = {
+    key: fs.readFileSync(process.env.TLSKEY),
+    cert: fs.readFileSync(process.env.TLSCERT)
+};
+const port = 443;
+
+console.log(options);
 
 // Set up Express
 const app = express();
-const httpServer = http.createServer(app);
+const httpServer = https.createServer(options, app);
 const io = socketIO(httpServer);
 
 // Socket Variables
