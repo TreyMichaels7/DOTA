@@ -1,38 +1,254 @@
+@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
+
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+html {
+  background-color: black;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.landing-main {
+  margin: 100px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  flex-direction: column;
+}
+
+.landing-title {
+  color: white;
+  font-size: 80px;
+  font-family: 'Courgette', cursive;
+}
+
+.landing-subtitle {
+  color: white;
+  font-size: 24px;
+}
+
+.landing-text {
+  margin: 3px;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.landing-links {
+  color: white;
+  text-decoration: none;
+  border: 1px solid white;
+  background-color: grey;
+  padding: 7px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.sign-in-button {
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
+.sign-up-button {
+  margin: 1em;
+}
+
+.sign-in {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-field {
+  width: 200px;
+  height: 25px;
+}
+
+.white-field {
+  background-color: white;
+}
+
+.register-main {
+  margin: 100px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register-title {
+  color: white;
+  font-size: 24px;
+  font-family: 'Courgette', cursive;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-button-group {
+  margin-top: 1em;
+}
+
+.form-group {
+  margin: 1em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.field-title {
+  color: white;
+  margin-right: 2em;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 2em;
+  height: 40px;
+  background-color: white;
+  vertical-align: center;
+}
+
+.nav-profile-pic {
+  border-radius: 50%;
+  background-color: white;
+  border: 3px solid black;
+  height: 40px;
+  width: 40px;
+}
+
+.nav-home-link {
+  color: black;
+  font-size: 40px;
+  font-family: 'Courgette', cursive;
+  text-decoration: none;
+}
+
+.nav-links {
+  color: black;
+  text-decoration: none;
+}
+
+.expanded {
+  background-color: grey;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  float: right;
+  clear: both;
+}
+
+.hidden {
+  display: none;
+}
+
+.profile-pic {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: white;
+  margin-right: 3em;
+}
+
+.profile-title {
+  margin-left: 2em;
+  margin-right: 2em;
+  font-size: 36px;
+  color: white;
+}
+
+.profile-main {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+}
+
+.profile-text {
+  color: white;
+}
+
+.profile-bio {
+  color: white;
+  margin-left: 4em;
+  margin-left: 4em;
+  margin-bottom: 4em;
+  height: 75px;
+}
+
+.profile-avail {
+  color: white;
+  margin-left: 4em;
+  margin-right: 4em;
+  height: 25px;
+}
+
+.profile-subtitle {
+  font-size: 30px;
+}
+
+.profile-container {
+  width: 80%;
+  margin-left: 4em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-block {
+  display: flex;
+  align-items: center;
+}
+
+.edit-profile {
+
+}
+
+.edit-button {
+  width: 100px;
+  height: 50px;
+  font-size: 20px;
+  background-color: maroon;
+  color: white;
+  border: 1px solid maroon;
+}
+
+@media (max-width: 850px) {
+
+  .landing-main {
+    margin-top: 50px;
+    margin-left: 0px;
+    margin-right: 0px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .landing-title {
+    font-size: 40px;
+  }
+
+  .landing-subtitle {
+    color: white;
+    font-size: 16px;
+  }
+
+}
+
+@media (max-width: 450px) {
+
+  .landing-main {
+    margin-top: 70px;
+  }
+
+  .register-main {
+    margin: 50px;
+  }
+
+  .landing-subtitle {
+    font-size: 14px;
+  }
+
+  .nav-home-link {
+    font-size: 30px;
   }
 }
