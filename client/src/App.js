@@ -22,6 +22,7 @@ class App extends Component {
             <Route path='/home'><HomePage/></Route>
             <Route path='/register'><CreateProfilePage/></Route>
             <Route path='/profile'><ProfilePage/></Route>
+            <Route path='/edit'><EditProfilePage/></Route>
             <Redirect to ='/' />
           </Switch>
         </div>
@@ -160,6 +161,102 @@ class CreateProfilePage extends Component {
   }
 }
 
+class EditProfilePage extends Component {
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      major: "",
+      pronouns: "",
+      bio: "",
+      gender: "male",
+      preference: "Men",
+      uploadProfile: "",
+    }
+  }
+
+  handleChange = (event) => {
+    let val = event.target.value;
+    this.setState({
+        [event.target.name]: val
+    });
+  }
+
+  submitForm = () => {
+
+  }
+
+  render() {
+    return (
+      <main className="register-main">
+        <h1 className="register-title">Edit Profile</h1>
+        <Form className="register-form">
+          <FormGroup className="form-group">
+            <Label className="field-title" for="FName">First Name*:</Label>
+            <Input type="text" name="firstName" id="FName" className="input-field" placeholder="First Name" maxLength="128" value={this.state.firstName} onChange={this.handleChange}/>
+          </FormGroup>
+          <FormGroup className="form-group">
+            <Label className="field-title" for="LName">Last Name*:</Label>
+            <Input type="text" name="lastName" id="LName" className="input-field" placeholder="Last Name" maxLength="128" value={this.state.lastName} onChange={this.handleChange}/>
+          </FormGroup>
+          <FormGroup className="form-group">
+            <Label className="field-title" for="exampleEmail">Email*:</Label>
+            <Input type="email" name="email" id="exampleEmail" className="input-field" placeholder="123@uw.edu" value={this.state.email} onChange={this.handleChange}/>
+          </FormGroup>
+          <FormGroup className="form-group">
+            <Label className="field-title" for="examplePassword">Password*:</Label>
+            <Input type="password" name="password" id="examplePassword" className="input-field" placeholder="Min 6 Characters" minLength="6" maxLength="16" value={this.state.password} onChange={this.handleChange}/>
+          </FormGroup>
+          <FormGroup className="form-group">
+            <Label className="field-title" for="Major">Major/Intended Major:</Label>
+            <Input type="text" name="major" id="major" className="input-field" maxLength="128" value={this.state.major} onChange={this.handleChange}/>
+          </FormGroup>
+          <FormGroup className="form-group">
+            <Label className="field-title" for="pronouns">Pronouns:</Label>
+            <Input type="text" name="pronouns" id="pronouns" className="input-field" maxLength="60" value={this.state.pronouns} onChange={this.handleChange}/>
+          </FormGroup>
+          <FormGroup className="form-group">
+            <Label className="field-title" for="bio">Bio:</Label>
+            <Input type="textarea" name="bio" id="bio" className="input-field" placeholder="Max 300 characters" maxLength="300" value={this.state.bio} onChange={this.handleChange}/>
+          </FormGroup>
+          <FormGroup className="form-group">
+            <Label className="field-title" for="Gender">Gender*:</Label>
+            <Input type="select" name="gender" id="gender" className="input-field white-field" value={this.state.gender} onChange={this.handleChange}>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </Input>
+          </FormGroup>
+          <FormGroup className="form-group">
+            <Label className="field-title" for="preference">Interested In*:</Label>
+            <Input type="select" name="preference" id="preference" className="input-field white-field" value={this.state.preference} onChange={this.handleChange}>
+              <option>Men</option>
+              <option>Women</option>
+              <option>Other</option>
+            </Input>
+          </FormGroup>
+          <FormGroup className="form-group">
+            <Label className="field-title" for="uploadProfile">Upload Profile</Label>
+            <Input type="file" name="uploadProfile" id="profilePic" className="input-field white-field" value={this.state.uploadProfile} onChange={this.handleChange}/>
+          </FormGroup>
+        </Form>
+        <div className="register-button-group">
+          <span className="sign-up-button">
+              <Link className="landing-links" onClick={this.submitForm} to="/profile">Submit</Link>
+          </span>
+          <span className="sign-up-button">
+              <Link className="landing-links" to="/profile">Back</Link>
+          </span>
+        </div>
+      </main>
+    )
+  }
+}
+
 
 class HomePage extends Component {
   render() {
@@ -186,7 +283,9 @@ class ProfilePage extends Component {
         <main className="profile-main">
           <div className="profile-block">
             <h1 className="profile-title">Your Profile</h1>
-            <button className="edit-button">Edit</button>
+            <span className="edit-button">
+                <Link className="edit-links" to="/edit">Edit</Link>
+            </span>
           </div>
           <div className="profile-container">
             <div className="profile-block">

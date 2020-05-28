@@ -206,7 +206,15 @@ html {
 
 }
 
+.edit-links {
+  color: white;
+  text-decoration: none;
+}
+
 .edit-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100px;
   height: 50px;
   font-size: 20px;
