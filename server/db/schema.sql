@@ -8,5 +8,6 @@ Create table Users (
     Pronouns varchar(60),
     Bio varchar(300),
     Gender varchar(60) not null,
-    Sexuality varchar(100) not null
+    Sexuality varchar(100) not null,
+    ProfileURL varchar(300) not null,
 )

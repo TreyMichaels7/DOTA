@@ -17,6 +17,11 @@ func main() {
 		ADDR = ":443"
 	}
 
+	REDISADDR := os.Getenv("REDISADDR")
+	if len(REDISADDR) == 0 {
+		log.Fatal("No REDISADDR environment variable found")
+	}
+
 	mux := http.NewServeMux()
 	// Test route
 	mux.HandleFunc("/v1/test", test)
