@@ -3,13 +3,13 @@ package main
 import (
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"os"
 )
 
 func test(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte ("hello world!"))
+	w.Write([]byte("hello world!"))
 }
-
 
 func main() {
 	ADDR := os.Getenv("ADDR")
@@ -18,6 +18,16 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+
+	// Chatroom Microservice
+	chatroomDirector := func(r *http.Request) {
+		r.Host = "chatroomsrv" // name of the docker instance running
+		r.URL.Host = "chatroomsrv"
+		r.URL.Scheme = "http"
+	}
+
+	chatroomRevProxy := &httputil.ReverseProxy{Director: chatroomDirector}
+
 	// Test route
 	mux.HandleFunc("/v1/test", test)
 
@@ -27,9 +37,11 @@ func main() {
 	mux.HandleFunc("/v1/matches/", test)
 	mux.HandleFunc("/v1/profile", test)
 	mux.HandleFunc("/v1/profile/", test)
-	mux.HandleFunc("/v1/chatroom", test)
-	mux.HandleFunc("/v1/chatroom/", test)
-	mux.HandleFunc("/v1/chatroom/invite", test)
+
+	mux.Handle("/v1/chatroom", chatroomRevProxy)
+	mux.Handle("/v1/chatroom/", chatroomRevProxy)
+	mux.Handle("/v1/chatroom/invite", chatroomRevProxy)
+
 	mux.HandleFunc("/v1/message/send", test)
 	mux.HandleFunc("/v1/messages", test)
 	mux.HandleFunc("/v1/sessions", test)
