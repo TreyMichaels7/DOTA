@@ -285,38 +285,6 @@ func TestUpdate(t *testing.T) {
 			false,
 		},
 		{
-			"Valid Update 2",
-			&User{
-				1,
-				"trey",
-				"michaels",
-				"trey@live.com",
-				[]byte ("xxxxxx"),
-				"hi i am trey",
-				"female",
-				"men",
-				"xxxxxx",
-			},
-			&Updates{
-				"hello i am trey",
-				"male",
-				"men",
-				"bird",
-			},
-			&User{
-				1,
-				"trey",
-				"michaels",
-				"trey@live.com",
-				[]byte ("xxxxxx"),
-				"hello i am trey",
-				"male",
-				"men",
-				"xxxxxx",
-			},
-			false,
-		},
-		{
 			"Update not working",
 			&User{
 				1,
@@ -392,6 +360,7 @@ func TestUpdate(t *testing.T) {
 			mock.ExpectQuery(query).WithArgs(c.givenUser.ID).WillReturnRows(row)
 			user, err := mainSQLStore.Update(c.givenUser.ID, c.givenUpdates)
 			fmt.Print(user)
+			fmt.Print(c.expectedUser)
 			if err != nil {
 				t.Errorf("Unexpected error on successful test [%s]: %v", c.name, err)
 			}
@@ -410,10 +379,6 @@ func TestUpdate(t *testing.T) {
 			if !strings.EqualFold(user.PhotoURL, c.expectedUser.PhotoURL) {
 				t.Errorf("Error, got %s but wanted %s", user.PhotoURL, c.expectedUser.PhotoURL)
 			}
-			t.Errorf("%s, %s", user.Bio, c.expectedUser.Bio)
-			t.Errorf("%s, %s", user.Gender, c.expectedUser.Gender)
-			t.Errorf("%s, %s", user.Sexuality, c.expectedUser.Sexuality)
-			t.Errorf("%s, %s", user.PhotoURL, c.expectedUser.PhotoURL)
 		}
 	}
 }
