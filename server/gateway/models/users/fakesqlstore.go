@@ -28,7 +28,7 @@ func (fs *FakeStore) GetByID(id int64) (*User, error) {
 
 //GetByEmail returns the User with the given email
 func (fs *FakeStore) GetByEmail(email string) (*User, error) {
-	if email == "test@test.com" {
+	if email == "trey@live.com" {
 		user := &User{
 			1,
 			"trey",
@@ -40,7 +40,7 @@ func (fs *FakeStore) GetByEmail(email string) (*User, error) {
 			"men",
 			"testing",
 		}
-		user.SetPassword("passhash123")
+		user.SetPassword("xxxxxx")
 		return user, nil
 	}
 	return nil, ErrUserNotFound
@@ -50,10 +50,6 @@ func (fs *FakeStore) GetByEmail(email string) (*User, error) {
 //the newly-inserted User, complete with the DBMS-assigned ID
 func (fs *FakeStore) Insert(user *User) (*User, error) {
 	return user, nil
-}
-
-func (fs *FakeStore) Log(userID int64, ipAddress string) error {
-	return nil
 }
 
 //Update applies UserUpdates to the given user ID
