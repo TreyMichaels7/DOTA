@@ -9,15 +9,15 @@ export DSN="root:$MYSQL_ROOT_PASSWORD@tcp(DOTADB:3306)/$MYSQL_DATABASE"
 docker rm -f redisServer
 docker rm -f DOTADB
 docker rm -f DOTAgateway
+docker network rm DOTANetwork
 
 docker pull treymichaels7/db
-
 
 docker network create DOTANetwork
 
 docker run -d --name redisServer --network DOTANetwork redis
 
-docker build -t treymichaels7/db
+docker build -t treymichaels7/db .
 
 docker run -d \
 --network DOTANetwork \
@@ -27,14 +27,13 @@ docker run -d \
 treymichaels7/db
 
 GOOS=linux go build
-docker build -t treymichaels7/gateway .
+docker build --no-cache -t treymichaels7/gateway .
+
+sleep 10s
 
 docker run \
     -d \
-    -v /Users/treymichaels/Desktop/go/src/github.com/DOTA/server/gateway:/user/test:ro \
     -e ADDR=:443 \
-    -e TLSCERT=$TLSCERT \
-    -e TLSKEY=$TLSKEY \
     -e SESSIONKEY=$SESSIONKEY \
     -e REDISADDR=$REDISADDR \
     -e DSN=$DSN \
@@ -43,3 +42,4 @@ docker run \
     --network DOTANetwork \
     --restart unless-stopped \
     treymichaels7/gateway
+
