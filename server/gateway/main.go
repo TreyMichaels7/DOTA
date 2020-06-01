@@ -1,24 +1,24 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
-	"database/sql"
-	"fmt"
 
-	"github.com/DOTA/server/gateway/handlers"
-	"github.com/DOTA/server/gateway/sessions"
-	"github.com/DOTA/server/gateway/models/users"
+	"DOTA/server/gateway/handlers"
+	"DOTA/server/gateway/models/users"
+	"DOTA/server/gateway/sessions"
+
 	"github.com/go-redis/redis"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func test(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte ("hello world!"))
+	w.Write([]byte("hello worlddd!"))
 }
-
 
 func main() {
 	ADDR := os.Getenv("ADDR")
@@ -26,15 +26,15 @@ func main() {
 		ADDR = ":443"
 	}
 
-	TLSCERT := os.Getenv("TLSCERT")
-	if len(TLSCERT) == 0 {
-		log.Fatal("No TLSCERT environment variable found")
-	}
+	// TLSCERT := os.Getenv("TLSCERT")
+	// if len(TLSCERT) == 0 {
+	// 	log.Fatal("No TLSCERT environment variable found")
+	// }
 
-	TLSKEY := os.Getenv("TLSKEY")
-	if len(TLSKEY) == 0 {
-		log.Fatal("No TLSKEY environment variable found")
-	}
+	// TLSKEY := os.Getenv("TLSKEY")
+	// if len(TLSKEY) == 0 {
+	// 	log.Fatal("No TLSKEY environment variable found")
+	// }
 
 	REDISADDR := os.Getenv("REDISADDR")
 	if len(REDISADDR) == 0 {
@@ -58,17 +58,17 @@ func main() {
 	defer db.Close()
 
 	if err := db.Ping(); err != nil {
-        log.Fatalf("error pinging database: %v\n", err)
-    } else {
-        fmt.Printf("successfully connected!\n")
-    }
+		log.Fatalf("error pinging database: %v\n", err)
+	} else {
+		fmt.Printf("successfully connected!\n")
+	}
 
-	hctx := handlers.HandlerContext {
+	hctx := handlers.HandlerContext{
 		SigningKey: SESSIONKEY,
 		SessionStore: sessions.NewRedisStore(redis.NewClient(&redis.Options{
-			Addr:     REDISADDR, 
-			Password: "",              
-			DB:       0,               
+			Addr:     REDISADDR,
+			Password: "",
+			DB:       0,
 		}), time.Hour),
 		UserStore: users.NewSQLStore(db),
 	}
@@ -99,6 +99,6 @@ func main() {
 	wrappedMux := handlers.NewCORS(mux)
 
 	log.Printf("Server is listening at %s...", ADDR)
-	//log.Fatal(http.ListenAndServeTLS(ADDR, TLSCERT, TLSKEY, wrappedMux))
-	log.Fatal(http.ListenAndServeTLS(ADDR, TLSCERT, TLSKEY, wrappedMux))
+	log.Fatal(http.ListenAndServe(ADDR, wrappedMux))
+	// log.Fatal(http.ListenAndServeTLS(ADDR, TLSCERT, TLSKEY, wrappedMux))
 }
