@@ -28,8 +28,8 @@ func TestGetByID(t * testing.T) {
 				"trey@live.com",
 				[]byte ("xxxxxx"),
 				"hello i am trey",
-				"male",
-				"men",
+				1,
+				1,
 				"testing",
 			},
 			1,
@@ -113,8 +113,8 @@ func TestGetByEmail(t * testing.T) {
 				"trey@live.com",
 				[]byte ("xxxxxx"),
 				"hello i am trey",
-				"male",
-				"men",
+				1,
+				1,
 				"testing",
 			},
 			"test@test.com",
@@ -196,8 +196,8 @@ func TestInsert(t *testing.T) {
 				"trey@live.com",
 				[]byte ("xxxxxx"),
 				"hello i am trey",
-				"male",
-				"men",
+				1,
+				1,
 				"testing",
 			},
 			&User{
@@ -207,8 +207,8 @@ func TestInsert(t *testing.T) {
 				"trey@live.com",
 				[]byte ("xxxxxx"),
 				"hello i am trey",
-				"male",
-				"men",
+				1,
+				1,
 				"testing",
 			},
 			false,
@@ -261,14 +261,14 @@ func TestUpdate(t *testing.T) {
 				"trey@live.com",
 				[]byte ("xxxxxx"),
 				"hi i am trey",
-				"female",
-				"men",
+				2,
+				1,
 				"testing",
 			},
 			&Updates{
 				"hello i am trey",
-				"male",
-				"men",
+				1,
+				1,
 				"xxxxxx",
 			},
 			&User{
@@ -278,8 +278,8 @@ func TestUpdate(t *testing.T) {
 				"trey@live.com",
 				[]byte ("xxxxxx"),
 				"hello i am trey",
-				"male",
-				"women",
+				1,
+				2,
 				"xxxxxx",
 			},
 			false,
@@ -293,14 +293,14 @@ func TestUpdate(t *testing.T) {
 				"trey@live.com",
 				[]byte ("xxxxxx"),
 				"hi i am trey",
-				"female",
-				"men",
+				1,
+				1,
 				"xxxxxx",
 			},
 			&Updates{
 				"hello i am trey",
-				"male",
-				"men",
+				1,
+				1,
 				"",
 			},
 			&User{
@@ -310,8 +310,8 @@ func TestUpdate(t *testing.T) {
 				"trey@live.com",
 				[]byte ("xxxxxx"),
 				"hello i am trey",
-				"male",
-				"women",
+				1,
+				2,
 				"xxxxxx",
 			},
 			true,
@@ -369,12 +369,6 @@ func TestUpdate(t *testing.T) {
 			}
 			if !strings.EqualFold(user.Bio, c.expectedUser.Bio) {
 				t.Errorf("Error, got %s but wanted %s", user.Bio, c.expectedUser.Bio)
-			}
-			if !strings.EqualFold(user.Gender, c.expectedUser.Gender) {
-				t.Errorf("Error, got %s but wanted %s", user.Gender, c.expectedUser.Gender)
-			}
-			if !strings.EqualFold(user.Sexuality, c.expectedUser.Sexuality) {
-				t.Errorf("Error, got %s but wanted %s", user.Sexuality, c.expectedUser.Sexuality)
 			}
 			if !strings.EqualFold(user.PhotoURL, c.expectedUser.PhotoURL) {
 				t.Errorf("Error, got %s but wanted %s", user.PhotoURL, c.expectedUser.PhotoURL)

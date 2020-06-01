@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/DOTA/server/gateway/models/users"
-	"github.com/DOTA/server/gateway/sessions"
+	"DOTA/server/gateway/models/users"
+	"DOTA/server/gateway/sessions"
 	//"github.com/gorilla/mux"
 )
 
@@ -24,8 +24,8 @@ func TestUsersHandler(t *testing.T) {
 		Email: "trey@live.com",
 		PassHash: []byte ("xxxxxx"),
 		Bio: "hello i am trey",
-		Gender: "male",
-		Sexuality: "men",
+		Gender: 1,
+		Sexuality: 1,
 		PhotoURL: "testing",
 	}
 
@@ -35,8 +35,8 @@ func TestUsersHandler(t *testing.T) {
 		Email: "trey@live.com",
 		Password: "xxxxxx",
 		Bio: "hello i am trey",
-		Gender: "male",
-		Sexuality: "men",
+		Gender: 1,
+		Sexuality: 1,
 		PhotoURL: "testing",
 	}
 
@@ -147,8 +147,8 @@ func TestSpecificUserHandlerForGet(t *testing.T) {
 		Email: "trey@live.com",
 		PassHash: []byte ("xxxxxx"),
 		Bio: "hello i am trey",
-		Gender: "male",
-		Sexuality: "men",
+		Gender: 1,
+		Sexuality: 1,
 		PhotoURL: "testing",
 	}
 
@@ -264,15 +264,15 @@ func TestSpecificUserHandlerForPatch(t *testing.T) {
 		Email: "trey@live.com",
 		PassHash: []byte ("xxxxxx"),
 		Bio: "hello i am trey",
-		Gender: "male",
-		Sexuality: "men",
+		Gender: 1,
+		Sexuality: 1,
 		PhotoURL: "testing",
 	}
 
 	updates := &users.Updates{
 		Bio: "bye trey",
-		Gender: "female",
-		Sexuality: "women",
+		Gender: 1,
+		Sexuality: 1,
 		PhotoURL: "xxxxxx",
 	}
 
@@ -484,8 +484,8 @@ func TestSpecificSessionHandler(t *testing.T) {
 		Email: "trey@live.com",
 		PassHash: []byte ("xxxxxx"),
 		Bio: "hello i am trey",
-		Gender: "male",
-		Sexuality: "men",
+		Gender: 1,
+		Sexuality: 1,
 		PhotoURL: "testing",
 	}
 

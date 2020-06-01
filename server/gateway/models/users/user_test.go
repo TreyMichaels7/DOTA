@@ -24,8 +24,8 @@ func TestValidate(t *testing.T) {
 			"treymichaels@live.com",
 			"xxxxxx",
 			"Hi I am trey",
-			"Male",
-			"Women",
+			1,
+			2,
 			"testing"},
 			false,
 		},
@@ -37,8 +37,8 @@ func TestValidate(t *testing.T) {
 			"treymichaels",
 			"xxxxxx",
 			"Hi I am trey",
-			"Male",
-			"Women",
+			1,
+			2,
 			"testing"},
 			true,
 		},
@@ -50,8 +50,8 @@ func TestValidate(t *testing.T) {
 				"treymichaels@live.com",
 				"xxxx",
 				"Hi I am trey",
-				"Male",
-				"Women",
+				1,
+				2,
 				"testing"},
 			true,
 		},
@@ -82,8 +82,8 @@ func TestToUser(t *testing.T) {
 				"treymichaels@live.com",
 				"xxxxxx",
 				"Hi I am trey",
-				"Male",
-				"Women",
+				1,
+				2,
 				"testing"},
 			&User{
 				1,
@@ -92,8 +92,8 @@ func TestToUser(t *testing.T) {
 				"trey@live.com",
 				[]byte ("xxxxxx"),
 				"Hi I am trey",
-				"Male",
-				"Women",
+				1,
+				2,
 				"testing",
 			},
 			false,
@@ -136,8 +136,8 @@ func TestFullName(t *testing.T) {
 				"trey@live.com",
 				[]byte ("xxxxxx"),
 				"Hi I am trey",
-				"Male",
-				"Women",
+				1,
+				2,
 				"testing",
 			},
 			"trey michaels",
@@ -159,8 +159,8 @@ func TestAuthenticate(t *testing.T) {
 		"trey@live.com",
 		[]byte ("xxxxxx"),
 		"hello i am trey",
-		"male",
-		"men",
+		1,
+		1,
 		"testing",
 	}
 
@@ -201,44 +201,44 @@ func TestApplyUpdates(t *testing.T) {
 		"trey@live.com",
 		[]byte ("xxxxxx"),
 		"Hi I am trey",
-		"Male",
-		"Women",
+		1,
+		2,
 		"testing",
 	}
 
 	cases := []struct {
 		TestName	string
 		UpdateBio	string
-		UpdateGender string
-		UpdateSexuality string
+		UpdateGender int32
+		UpdateSexuality int32
 		UpdatePhotoURL string
 		ExpectBio string
-		ExpectGender string
-		ExpectSexuality string
+		ExpectGender int32
+		ExpectSexuality int32
 		ExpectPhotoURL string
 		ExpectError bool
 	}{
 		{
 			"Update everything",
 			"i love sushi",
-			"Female",
-			"Women",
+			2,
+			2,
 			"xxxxxx",
 			"i love sushi",
-			"Female",
-			"Women",
+			2,
+			2,
 			"xxxxxx",
 			false,
 		},
 		{
 			"No change in photoURL",
 			"i love sushi",
-			"Female",
-			"Women",
+			2,
+			2,
 			"",
 			"i love sushi",
-			"Female",
-			"Women",
+			2,
+			2,
 			"xxxxxx",
 			false,
 		},
@@ -258,12 +258,6 @@ func TestApplyUpdates(t *testing.T) {
 		}
 		if !strings.EqualFold(testUser.Bio, c.ExpectBio) {
 			t.Errorf("case %s: expected Bio: %s, retrieved: %s \n", c.TestName, c.ExpectBio, testUser.Bio)
-		}
-		if !strings.EqualFold(testUser.Gender, c.ExpectGender) {
-			t.Errorf("case %s: expected Gender: %s, retrieved: %s \n", c.TestName, c.ExpectGender, testUser.Gender)
-		}
-		if !strings.EqualFold(testUser.Sexuality, c.ExpectSexuality) {
-			t.Errorf("case %s: expected Sexuality: %s, retrieved: %s \n", c.TestName, c.ExpectSexuality, testUser.Sexuality)
 		}
 		if !strings.EqualFold(testUser.PhotoURL, c.ExpectPhotoURL) {
 			t.Errorf("case %s: expected PhotoURL: %s, retrieved: %s \n", c.TestName, c.ExpectPhotoURL, testUser.PhotoURL)
