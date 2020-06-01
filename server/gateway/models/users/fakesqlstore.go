@@ -5,7 +5,6 @@ import (
 )
 
 type FakeStore struct {
-	
 }
 
 //GetByID returns the User with the given ID
@@ -16,10 +15,10 @@ func (fs *FakeStore) GetByID(id int64) (*User, error) {
 			"trey",
 			"michaels",
 			"trey@live.com",
-			[]byte ("xxxxxx"),
+			[]byte("xxxxxx"),
 			"hello i am trey",
-			"male",
-			"men",
+			1,
+			1,
 			"testing",
 		}, nil
 	}
@@ -34,10 +33,10 @@ func (fs *FakeStore) GetByEmail(email string) (*User, error) {
 			"trey",
 			"michaels",
 			"trey@live.com",
-			[]byte ("xxxxxx"),
+			[]byte("xxxxxx"),
 			"hello i am trey",
-			"male",
-			"men",
+			1,
+			1,
 			"testing",
 		}
 		user.SetPassword("xxxxxx")
@@ -61,7 +60,7 @@ func (fs *FakeStore) Update(id int64, updates *Updates) (*User, error) {
 			"trey",
 			"michaels",
 			"trey@live.com",
-			[]byte ("xxxxxx"),
+			[]byte("xxxxxx"),
 			updates.Bio,
 			updates.Gender,
 			updates.Sexuality,
