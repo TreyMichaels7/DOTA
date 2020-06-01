@@ -1,8 +1,8 @@
 package handlers
 
 import (
+	"DOTA/server/gateway/models/users"
 	"time"
-	"github.com/DOTA/server/gateway/models/users"
 )
 
 //The SessionState struct that holds the time that the session began
