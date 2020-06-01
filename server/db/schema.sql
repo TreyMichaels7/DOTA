@@ -1,5 +1,5 @@
 Create table if not exists Users (
-    ID int primary key not null AUTO_INCREMENT,
+    ID int not null auto_increment primary key,
     FirstName varchar(128) not null,
     LastName varchar(128) not null,
     Email varchar(320) not null unique,

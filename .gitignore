@@ -15,3 +15,5 @@ example/node_modules
 
 privkey.pem
 fullchain.pem
+.DS_Store
+**/.DS_Store

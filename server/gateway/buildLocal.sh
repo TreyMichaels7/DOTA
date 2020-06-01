@@ -17,8 +17,6 @@ docker network create DOTANetwork
 
 docker run -d --name redisServer --network DOTANetwork redis
 
-docker build -t treymichaels7/db .
-
 docker run -d \
 --network DOTANetwork \
 --name DOTADB \
