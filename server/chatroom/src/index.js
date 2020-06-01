@@ -3,18 +3,23 @@ const express = require('express');
 const path = require('path');
 const socketIO = require("socket.io");
 const https = require("https");
+// const http = require("http");
+
 const options = {
     key: fs.readFileSync(process.env.TLSKEY),
     cert: fs.readFileSync(process.env.TLSCERT)
 };
 
 const port = 443;
+// const port = 80;
 // console.log(options);
 
 // Set up Express
 const app = express();
 const httpServer = https.createServer(options, app);
+// const httpServer = http.createServer(app);
 const io = socketIO(httpServer);
+
 
 // Socket Variables
 let activeSockets = [];
@@ -79,7 +84,7 @@ io.on("connection", socket => {
             candidate: data.candidate 
         });
     });
-    
+
 
     // Disconnecting Sockets
     socket.on("disconnect", () => {
@@ -89,10 +94,6 @@ io.on("connection", socket => {
 
         io.emit("update-user-list", { users: activeSockets });
         io.emit("disconnect-call", { user: socket.id });
-
-        // console.log(`Socket ${socket.id} Disconnected!`);
-        // console.log("Currently Active sockets: " + activeSockets);
-        // console.log();
     });
 });
 

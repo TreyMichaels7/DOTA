@@ -3,26 +3,62 @@
 <head>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        // Getting access to the video camera / audio
+        var constraints = { video: true, audio: true };
+
+        function successCallback(stream) {
+            console.log("Success");
+            const localVideo = document.getElementById("local-video");
+            if (localVideo) { localVideo.srcObject = stream; }
+            localVideo.play();
+            localVideo.setAttribute('playsinline', 'true');
+
+            stream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, stream)
+            });
+        }
+
+        function errorCallback(error) {
+            console.log("navigator.getUserMedia error: ", error);
+        }
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(successCallback)
+            .catch(errorCallback);
+
         // Variables
         const { RTCPeerConnection, RTCSessionDescription } = window;
-        let peerConnection = new RTCPeerConnection({
+        let pcBrowser = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection   //compatibility for firefox and chrome;
+        let peerConnection = new pcBrowser({
             iceServers: [{
-                url: 'turn:54.227.245.189',
+                urls: 'turn:54.227.245.189',
                 username: 'dota',
                 credential: 'datingontheave'
             }]
         });
+
         let thisSocket = "";
         let remoteSocket = "";
         let isAlreadyCalling = false;
         let activeTracks = [];
 
-        // window.onload = (e) => {
-        //     document.getElementById("local-id").play();
-        // }
+        let muted = false;
+
+        window.onload = (e) => {
+            // document.getElementById("local-id").play();
+            document.getElementById("mute").onclick = () => {
+                console.log("mute");
+            };
+
+            document.getElementById("end-call").onclick = () => {
+                console.log("end");
+                open(location, '_self').close();
+            };
+        }
 
         // Init
         var socket = io.connect('https://chatroom.kelden.me/');
+        // var socket = io.connect('http://localhost:80/');
 
         // Turn Server
         function checkTURNServer(turnConfig, timeout) {
@@ -92,6 +128,7 @@
                 showRemoteVid(false);
 
                 alert(`${user} has left the call.`);
+                open(location, '_self').close();
             }
         });
 
@@ -158,27 +195,6 @@
             peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
         });
 
-        // Getting access to the video camera / audio
-        var constraints = { video: true, audio: true };
-
-        function successCallback(stream) {
-            console.log("Success");
-            const localVideo = document.getElementById("local-video");
-            if (localVideo) { localVideo.srcObject = stream; }
-            localVideo.play();
-
-            stream.getTracks().forEach(track => {
-                peerConnection.addTrack(track, stream)
-            });
-        }
-
-        function errorCallback(error) {
-            console.log("navigator.getUserMedia error: ", error);
-        }
-
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then(successCallback)
-            .catch(errorCallback);
         // navigator.getUserMedia = (
         //     navigator.getUserMedia ||
         //     navigator.webkitGetUserMedia ||
@@ -212,6 +228,7 @@
             const remoteVideo = document.getElementById("remote-video");
             if (remoteVideo) {
                 remoteVideo.srcObject = stream;
+                remoteVideo.setAttribute('playsinline', 'true');
                 // remoteVideo.play();
             }
         };
@@ -248,8 +265,11 @@
             // Update Remote ID and Show
             document.getElementById('remote-id').textContent = remoteId;
             let remoteContainer = document.getElementById("remote-container");
+            let remoteControls = document.querySelector(".video-button-container");
+
             let display = show ? "block" : "none";
             remoteContainer.style.display = display;
+            remoteControls.style.display = display;
 
             // Move Header Logo
             let logo = document.getElementById('logo');
@@ -297,6 +317,11 @@
             max-width: 300px;
             border-radius: 5px;
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+            -moz-transform: scale(-1, 1);
+            -webkit-transform: scale(-1, 1);
+            -o-transform: scale(-1, 1);
+            transform: scale(-1, 1);
+            filter: FlipH;
         }
 
         #local-container>p {
@@ -315,11 +340,49 @@
             right: 20;
             margin: 0;
         }
+
+        .video-button-container {
+            z-index: 10;
+            position: absolute;
+            bottom: 10;
+            left: 20;
+            display: none;
+        }
+
+        .video-button {
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .video-button:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        #mute {
+            background-color: #a2a2a2;
+        }
+
+        #end-call {
+            background-color: #f6665c;
+        }
+
+        #share {
+            background-color: #03a9f4;
+        }
     </style>
 </head>
 
 <body>
     <h1 id="logo">Dating on the Ave</h1>
+    <div class="video-button-container">
+        <div class="video-button" id="mute">Mute</div>
+        <div class="video-button" id="end-call">End Call</div>
+        <div class="video-button" id="share">Share Contact</div>
+    </div>
     <div id="remote-container">
         <p>Them (<span id="remote-id"></span>)</p>
         <video autoplay class="remote-video" id="remote-video"></video>
