@@ -1,16 +1,28 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, NavLink, Switch, Redirect } from 'react-router-dom';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap'
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Link, Switch, Redirect } from 'react-router-dom';
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
 import './App.css';
+
+import api from './Constants/APIEndpoints';
 
 class App extends Component {
   
   constructor(props){
     super(props);
     this.state = {
-
+      authToken: localStorage.getItem("Authorization") || null,
+      user: null,
+      loggedIn: false
     }
+  }
+
+  /**
+  * @description sets the user
+  */
+  setUser = (user) => {
+    this.setState({ user,
+      loggedIn: true
+    });
   }
 
   render() {
@@ -19,11 +31,11 @@ class App extends Component {
         <div>
           <Switch>
             <Route exact path='/'><LandingPage/></Route>
-            <Route path='/home'><HomePage/></Route>
-            <Route path='/register'><CreateProfilePage/></Route>
-            <Route path='/profile'><ProfilePage/></Route>
+            <Route path='/home'>{this.state.loggedIn ? <HomePage/> : <LandingPage/>}</Route>
+            <Route path='/register' render={(props) => <CreateProfilePage {...props} adoptCallback={this.setUser}/>}></Route>
+            <Route path='/profile'>{this.state.loggedIn ? <ProfilePage/> : <LandingPage/>}</Route>
             <Route path='/edit'><EditProfilePage/></Route>
-            <Redirect to ='/' />
+            <Redirect to ={this.state.loggedIn ? '/home' : '/'} />
           </Switch>
         </div>
       </Router>
@@ -64,12 +76,10 @@ class CreateProfilePage extends Component {
       lastName: "",
       email: "",
       password: "",
-      major: "",
-      pronouns: "",
       bio: "",
       gender: "male",
-      preference: "Men",
-      uploadProfile: "",
+      sexuality: "male",
+      photoURL: "",
       completed: false
     }
   }
@@ -82,15 +92,73 @@ class CreateProfilePage extends Component {
     if (this.state.firstName !== "" && this.state.lastName !== "" && this.state.email !== "" && this.state.password !== "") {
       this.setState({
         completed: true
-      })
+      });
+      console.log(this.state.completed);
+    } else {
+      this.setState({
+        completed: false
+      });
     }
   }
 
-  submitForm = () => {
-    if (this.state.firstName === "" || this.state.lastName === "" || this.state.email === "" || this.state.password === "") {
+  submitForm = async (e) => {
+    if (!this.state.completed) {
+      e.preventDefault();
       alert("Error! Some required fields were not completed");
     } else {
-      alert("form submitted!");
+      const { 
+        firstName,
+        lastName,
+        email,
+        password,
+        bio,
+        photoURL } = this.state;
+      let gender;
+      let sexuality;
+
+      if (this.state.gender === "male") {
+        gender = 1;
+      } else if (this.state.gender === "female") {
+        gender = 2;
+      } else {
+        gender = 3;
+      }
+
+      if (this.state.sexuality === "male") {
+        sexuality = 1;
+      } else if (this.state.sexuality === "female") {
+        sexuality = 2;
+      } else {
+        sexuality = 3;
+      }
+
+      const sendData = {
+          firstName,
+          lastName,
+          email,
+          password,
+          bio,
+          gender,
+          sexuality,
+          photoURL
+      };
+      const response = await fetch(api.testbase + api.handlers.signUp, {
+        method: "POST",
+        body: JSON.stringify(sendData),
+        headers: new Headers({
+            "Content-Type": "application/json"
+        })
+      });
+      if (response.status >= 300) {
+        const error = await response.text();
+        console.log(error);
+        return;
+      }
+      const authToken = response.headers.get("Authorization");
+      localStorage.setItem("Authorization", authToken);
+      const user = await response.json();
+      console.log(user);
+      this.props.adoptCallback(user);
     }
   }
 
@@ -116,36 +184,28 @@ class CreateProfilePage extends Component {
             <Input type="password" name="password" id="examplePassword" className="input-field" placeholder="Min 6 Characters" minLength="6" maxLength="16" value={this.state.password} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
-            <Label className="field-title" for="Major">Major/Intended Major:</Label>
-            <Input type="text" name="major" id="major" className="input-field" maxLength="128" value={this.state.major} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="pronouns">Pronouns:</Label>
-            <Input type="text" name="pronouns" id="pronouns" className="input-field" maxLength="60" value={this.state.pronouns} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
             <Label className="field-title" for="bio">Bio:</Label>
             <Input type="textarea" name="bio" id="bio" className="input-field" placeholder="Max 300 characters" maxLength="300" value={this.state.bio} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="Gender">Gender*:</Label>
             <Input type="select" name="gender" id="gender" className="input-field white-field" value={this.state.gender} onChange={this.handleChange}>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
+              <option>male</option>
+              <option>female</option>
+              <option>other</option>
             </Input>
           </FormGroup>
           <FormGroup className="form-group">
-            <Label className="field-title" for="preference">Interested In*:</Label>
-            <Input type="select" name="preference" id="preference" className="input-field white-field" value={this.state.preference} onChange={this.handleChange}>
-              <option>Men</option>
-              <option>Women</option>
-              <option>Other</option>
+            <Label className="field-title" for="sexuality">Interested In*:</Label>
+            <Input type="select" name="sexuality" id="sexuality" className="input-field white-field" value={this.state.sexuality} onChange={this.handleChange}>
+              <option>male</option>
+              <option>female</option>
+              <option>other</option>
             </Input>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="uploadProfile">Upload Profile</Label>
-            <Input type="file" name="uploadProfile" id="profilePic" className="input-field white-field" value={this.state.uploadProfile} onChange={this.handleChange}/>
+            <Input type="file" name="uploadProfile" id="profilePic" className="input-field white-field" value={this.state.photoURL} onChange={this.handleChange}/>
           </FormGroup>
         </Form>
         <div className="register-button-group">
@@ -170,8 +230,6 @@ class EditProfilePage extends Component {
       lastName: "",
       email: "",
       password: "",
-      major: "",
-      pronouns: "",
       bio: "",
       gender: "male",
       preference: "Men",
@@ -212,31 +270,23 @@ class EditProfilePage extends Component {
             <Input type="password" name="password" id="examplePassword" className="input-field" placeholder="Min 6 Characters" minLength="6" maxLength="16" value={this.state.password} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
-            <Label className="field-title" for="Major">Major/Intended Major:</Label>
-            <Input type="text" name="major" id="major" className="input-field" maxLength="128" value={this.state.major} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="pronouns">Pronouns:</Label>
-            <Input type="text" name="pronouns" id="pronouns" className="input-field" maxLength="60" value={this.state.pronouns} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
             <Label className="field-title" for="bio">Bio:</Label>
             <Input type="textarea" name="bio" id="bio" className="input-field" placeholder="Max 300 characters" maxLength="300" value={this.state.bio} onChange={this.handleChange}/>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="Gender">Gender*:</Label>
             <Input type="select" name="gender" id="gender" className="input-field white-field" value={this.state.gender} onChange={this.handleChange}>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
+              <option>male</option>
+              <option>female</option>
+              <option>other</option>
             </Input>
           </FormGroup>
           <FormGroup className="form-group">
             <Label className="field-title" for="preference">Interested In*:</Label>
-            <Input type="select" name="preference" id="preference" className="input-field white-field" value={this.state.preference} onChange={this.handleChange}>
-              <option>Men</option>
-              <option>Women</option>
-              <option>Other</option>
+            <Input type="select" name="preference" id="preference" className="input-field white-field" value={this.state.sexuality} onChange={this.handleChange}>
+              <option>male</option>
+              <option>female</option>
+              <option>other</option>
             </Input>
           </FormGroup>
           <FormGroup className="form-group">
