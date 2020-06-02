@@ -372,6 +372,7 @@ class EditProfilePage extends Component {
     const user = await response.json();
     this.props.setUser(user);
     console.log("Updated!");
+    console.log(this.props.user);
   }
 
   render() {
@@ -410,7 +411,7 @@ class EditProfilePage extends Component {
         </Form>
         <div className="register-button-group">
           <span className="sign-up-button">
-              <Link className="landing-links" onClick={this.updateUser} to="/edit">Submit</Link>
+              <Link className="landing-links" onClick={this.updateUser} to="/profile">Submit</Link>
           </span>
           <span className="sign-up-button">
               <Link className="landing-links" to="/profile">Back</Link>
