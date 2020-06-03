@@ -167,7 +167,7 @@ class CreateProfilePage extends Component {
       bio: "",
       gender: "male",
       sexuality: "male",
-      photoURL: "",
+      photoURL: "https://picsum.photos/id/10/200/300",
       completed: false
     }
   }
@@ -193,6 +193,7 @@ class CreateProfilePage extends Component {
       e.preventDefault();
       alert("Error! Some required fields were not completed");
     } else {
+
       const { 
         firstName,
         lastName,
@@ -200,6 +201,7 @@ class CreateProfilePage extends Component {
         password,
         bio,
         photoURL } = this.state;
+
       let gender;
       let sexuality;
 
@@ -229,6 +231,7 @@ class CreateProfilePage extends Component {
           sexuality,
           photoURL
       };
+      
       const response = await fetch(api.testbase + api.handlers.signUp, {
         method: "POST",
         body: JSON.stringify(sendData),
@@ -571,7 +574,7 @@ class NavBar extends Component {
     super(props);
     this.state = {
       expanded: false,
-      profileImage: JSON.parse(localStorage.getItem("User")).photoURL || ""
+      profileImage: JSON.parse(localStorage.getItem("User")).photoURL || "https://picsum.photos/id/10/200/300"
     }
   }
 
