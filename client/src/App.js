@@ -11,9 +11,12 @@ class App extends Component {
     super(props);
     this.state = {
       authToken: localStorage.getItem("Authorization") || null,
-      user: null,
-      loggedIn: false
+      user: localStorage.getItem("User") || null,
+      loggedIn: localStorage.getItem("Logged-In") || false
     }
+    console.log(this.state.authToken);
+    console.log(this.state.user);
+    console.log(this.state.loggedIn);
   }
 
   /**
@@ -22,7 +25,7 @@ class App extends Component {
   setUser = (user) => {
     this.setState({ 
       authToken: localStorage.getItem("Authorization"),
-      user,
+      user: localStorage.getItem("User"),
       loggedIn: true
     });
     console.log("Logged In!");
@@ -32,7 +35,7 @@ class App extends Component {
   }
 
   signOut = async (e) => {
-
+    console.log("HELLO!");
     this.setState({
       authToken: null,
       user: null,
@@ -53,8 +56,8 @@ class App extends Component {
     }
 
     console.log("Logged Out!");
+    localStorage.clear();
     alert("You have been logged out!");
-
   }
 
   render() {
@@ -64,8 +67,8 @@ class App extends Component {
           <Switch>
             <Route exact path='/' render={(props) => <LandingPage {...props} loggedIn={this.state.loggedIn} setUser={this.setUser}/>}></Route>
             <Route path='/home' render={(props) => <HomePage {...props} loggedIn={this.state.loggedIn} signOut={this.signOut}/>}></Route>
-            <Route path='/register' render={(props) => <CreateProfilePage {...props} setUser={this.setUser}/>}></Route>
-            <Route path='/profile' render={(props) => <ProfilePage {...props} loggedIn={this.state.loggedIn} user={this.state.user}/>} signOut={this.signOut}></Route>
+            <Route path='/register' render={(props) => <CreateProfilePage {...props} setUser={this.setUser} loggedIn={this.state.loggedIn}/>}></Route>
+            <Route path='/profile' render={(props) => <ProfilePage {...props} loggedIn={this.state.loggedIn} signOut={this.signOut}/>}></Route>
             <Route path='/edit' render={(props) => <EditProfilePage {...props} loggedIn={this.state.loggedIn} user={this.state.user} auth={this.state.authToken} setUser={this.setUser}/>}></Route>
             <Redirect to = '/' />
           </Switch>
@@ -118,9 +121,12 @@ class LandingPage extends Component {
 
     const authToken = response.headers.get("Authorization");
     localStorage.setItem("Authorization", authToken);
+    localStorage.setItem("Logged-In", true);
     const user = await response.json();
+    localStorage.setItem("User", JSON.stringify(user));
     this.props.setUser(user);
     alert("Logging in...");
+    return <Redirect to ="/home"/>
   }
  
   render() {
@@ -136,7 +142,7 @@ class LandingPage extends Component {
           <Input type="email" name="email" className="input-field" value={this.state.email} onChange={this.handleChange} placeholder="Ex: 123@uw.edu"/>
           <Input type="password" name="password" className="input-field" value={this.state.password} onChange={this.handleChange} placeholder="Min 6 Characters" minLength="6"/>
           <span className="sign-in-button" >
-            <Link className="landing-links" onClick={this.signIn} to="/" >Sign In</Link>
+            <span className="landing-links" onClick={this.signIn}>Sign In</span>
           </span>
           <p className="landing-text">--Or--</p>
           <p className="landing-text">Don't Have an Account?</p>
@@ -237,13 +243,19 @@ class CreateProfilePage extends Component {
       }
       const authToken = response.headers.get("Authorization");
       localStorage.setItem("Authorization", authToken);
+      localStorage.setItem("Logged-In", true);
       const user = await response.json();
+      localStorage.setItem("User", JSON.stringify(user));
       this.props.setUser(user);
       alert("Profile Successfully Created!");
     }
   }
 
   render() {
+    if (this.props.loggedIn) {
+      return <Redirect to = '/home' />;
+    }
+
     return (
       <main className="register-main">
         <h1 className="register-title">Create Your Profile</h1>
@@ -291,7 +303,7 @@ class CreateProfilePage extends Component {
         </Form>
         <div className="register-button-group">
           <span className="sign-up-button">
-              <Link className="landing-links" onClick={this.submitForm} to={this.state.completed ? "/home" : "/register"}>Submit</Link>
+              <span className="landing-links" onClick={this.submitForm}>Submit</span>
           </span>
           <span className="sign-up-button">
               <Link className="landing-links" to="/">Back</Link>
@@ -311,7 +323,9 @@ class EditProfilePage extends Component {
       gender: "male",
       sexuality: "Men",
       photoURL: "",
+      submitted: false
     }
+
   }
 
   handleChange = (event) => {
@@ -321,7 +335,31 @@ class EditProfilePage extends Component {
     });
   }
 
+  
+  updateStorage = async (id) => {
+    console.log(api.testbase + api.handlers.userInfo + id);
+    const response = await fetch(api.testbase + api.handlers.userInfo + id, {
+      method: "GET",
+      headers: ({
+        "Authorization": localStorage.getItem("Authorization")
+      })
+    });
+
+    if (response.status >= 300) {
+      const error = await response.text();
+      alert(error);
+      return;
+    }
+
+    const user = await response.json();
+    localStorage.setItem("User", JSON.stringify(user));
+    alert("Profile successfully updated!");
+    this.setState({submitted: true});
+  }
+  
+
   updateUser = async (e) => {
+    let getUser = JSON.parse(localStorage.getItem("User"));
     const {
       bio,
       photoURL
@@ -353,31 +391,39 @@ class EditProfilePage extends Component {
       photoURL
     }
 
-    console.log(this.props.user.id);
-    console.log(this.props.auth);
-    console.log(api.testbase + api.handlers.userInfo + this.props.user.id);
-    const response = await fetch(api.testbase + api.handlers.userInfo + this.props.user.id, {
+    console.log(api.testbase + api.handlers.userInfo + getUser['id']);
+    console.log(localStorage.getItem("Authorization"));
+    const response = await fetch(api.testbase + api.handlers.userInfo + getUser['id'], {
       method: "PATCH",
       body: JSON.stringify(sendData),
       headers: ({
-        "Authorization": this.props.auth,
+        "Authorization": localStorage.getItem("Authorization"),
         "Content-Type": "application/json"
       })
     });
+
     if (response.status >= 300) {
       const error = await response.text();
       alert(error);
       return;
     }
-    const user = await response.json();
-    this.props.setUser(user);
+
+    const update = await response.json();
+    console.log(update);
     console.log("Updated!");
-    console.log(this.props.user);
+    this.updateStorage(getUser['id']);
   }
+
+
 
   render() {
     if (!this.props.loggedIn) {
       return <Redirect to = '/' />;
+    }
+
+    if (this.state.submitted) {
+      this.setState({submitted: false});
+      return <Redirect to = '/profile'/>
     }
 
     return (
@@ -411,7 +457,7 @@ class EditProfilePage extends Component {
         </Form>
         <div className="register-button-group">
           <span className="sign-up-button">
-              <Link className="landing-links" onClick={this.updateUser} to="/profile">Submit</Link>
+              <span className="landing-links" onClick={this.updateUser}>Submit</span>
           </span>
           <span className="sign-up-button">
               <Link className="landing-links" to="/profile">Back</Link>
@@ -443,8 +489,42 @@ class HomePage extends Component {
 }
 
 class ProfilePage extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: JSON.parse(localStorage.getItem("User")),
+      gender: "",
+      sexuality: ""
+    }
+  }
+
+  componentDidMount() {
+    this.setGenderAndSexuality();
+  }
+
+  setGenderAndSexuality = () => {
+    if (this.state.user.gender === 1) {
+      this.setState({gender: "Male"});
+    } else if (this.state.user.gender === 2) {
+      this.setState({gender: "Female"});
+    } else {
+      this.setState({gender: "Other"});
+    }
+    console.log(this.state.gender);
+
+    if (this.state.user.sexuality === 1) {
+      this.setState({sexuality: "Men"});
+    } else if (this.state.user.sexuality === 2) {
+      this.setState({sexuality: "Women"});
+    } else {
+      this.setState({sexuality: "other"});
+    }
+    console.log(this.state.sexuality);
+  }
   
   render() {
+    
     if (!this.props.loggedIn) {
       return <Redirect to = '/' />;
     }
@@ -463,11 +543,13 @@ class ProfilePage extends Component {
           </div>
           <div className="profile-container">
             <div className="profile-block">
-              <div className="profile-pic">
-                <img className="profile-pic" src={this.props.user.photoURL} alt="profile"/>
+              <div>
+                <img className="profile-pic" src={this.state.user.photoURL} alt="profile"/>
               </div>
               <div className="profile-text">
-                <h2>{this.props.user.firstName + " " + this.props.user.lastName}</h2>
+                <h2>{this.state.user.firstName + " " + this.state.user.lastName}</h2>
+                <p>Identifies as {this.state.gender}</p>
+                <p>Interested in {this.state.sexuality}</p>
               </div>
             </div>
             <div className="edit-profile">
@@ -475,7 +557,7 @@ class ProfilePage extends Component {
           </div>
           <div className="profile-bio">
             <h2 className="profile-subtitle">Bio:</h2>
-            <p className="profile-text">{this.props.user.bio}</p>
+            <p className="profile-text">{this.state.user.bio}</p>
           </div>
         </main>
       </div>
@@ -488,7 +570,8 @@ class NavBar extends Component {
   constructor(props){
     super(props);
     this.state = {
-      expanded: false
+      expanded: false,
+      profileImage: JSON.parse(localStorage.getItem("User")).photoURL || ""
     }
   }
 
@@ -503,15 +586,15 @@ class NavBar extends Component {
           <div>
             <a className="nav-home-link" href="/home">Dating on the Ave</a>
           </div>
-          <Button className="nav-profile-pic" onClick={this.expandMenu}>
-            
+          <Button className="nav-button" onClick={this.expandMenu}>
+            <img className="nav-profile-pic" src={this.state.profileImage} alt="profile"/>
           </Button>
         </div>
         <div className={this.state.expanded ? "expanded" : "hidden"}>
           <Link className="nav-links" to="/profile">Profile</Link>
           <Link className="nav-links" to="/home">Notifications</Link>
           <span onClick={this.props.signOut}>
-            <Link className="nav-links" to="/">Sign Out</Link>
+            <span className="nav-links" >Sign Out</span>
           </span>
         </div>
       </nav>
