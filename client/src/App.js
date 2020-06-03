@@ -231,7 +231,7 @@ class CreateProfilePage extends Component {
           sexuality,
           photoURL
       };
-      
+
       const response = await fetch(api.testbase + api.handlers.signUp, {
         method: "POST",
         body: JSON.stringify(sendData),
@@ -473,6 +473,62 @@ class EditProfilePage extends Component {
 
 
 class HomePage extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      match1: localStorage.getItem("match1") || null,
+      match2: localStorage.getItem("match2") || null,
+      match3: localStorage.getItem("match3") || null,
+    }
+  }
+
+  componentDidMount() {
+    if (!localStorage.getItem("match1")) {
+      localStorage.setItem("match1", this.getMatches());
+    }
+    if (!localStorage.getItem("match2")) {
+      localStorage.setItem("match2", this.getMatches())
+    }
+    if (!localStorage.getItem("match3")) {
+      localStorage.setItem("match3", this.getMatches())
+    }
+    console.log(localStorage.getItem("match2"));
+    console.log(localStorage.getItem("match2"));
+    console.log(localStorage.getItem("match2"));
+  }
+
+  resetMatches = () => {
+    localStorage.removeItem("match1");
+    localStorage.removeItem("match2");
+    localStorage.removeItem("match3");
+  }
+
+  getMatches = async () => {
+    let id = Math.floor(Math.random() * 10) + 1; 
+    while (id === JSON.parse(localStorage.getItem("User")).id) {
+      id = Math.floor(Math.random() * 10) + 1; 
+    }
+    let idStr = id.toString();
+    console.log(idStr);
+    const response = await fetch(api.testbase + api.handlers.userInfo + idStr, {
+      method: "GET",
+      headers: {
+        "Authorization": localStorage.getItem("Authorization")
+      }
+    })
+
+    if (response.status >= 300) {
+      const error = await response.text();
+      console.log(error);
+      return this.getMatches();
+    }
+
+    const foundUser = await response.json();
+    console.log(foundUser);
+    return foundUser;
+  }
+
   render() {
     if (!this.props.loggedIn) {
       return <Redirect to = '/' />;
@@ -484,7 +540,53 @@ class HomePage extends Component {
           <NavBar signOut={this.props.signOut}/>
         </header>
         <main>
-
+          <div className="home-main">
+            <div className="match-container">
+                <div className="match-group">
+                  <div className="buttons">
+                    <button className="like"><span>&#10004;</span></button>
+                    <button className="dislike"><span>&#10008;</span></button>
+                  </div>
+                  <div className="match-card">
+                      <img src="" alt=""/>
+                      <div>
+                      </div>
+                  </div>
+                </div>
+                <div className="match-group">
+                  <div className="buttons">
+                    <button className="like"><span>&#10004;</span></button>
+                    <button className="dislike"><span>&#10008;</span></button>
+                  </div>
+                  <div className="match-card">
+                      <img src="" alt=""/>
+                      <div>
+                      </div>
+                  </div>
+                </div>
+                <div className="match-group">
+                  <div className="buttons">
+                    <button className="like"><span>&#10004;</span></button>
+                    <button className="dislike"><span>&#10008;</span></button>
+                  </div>
+                  <div className="match-card">
+                      <img src="" alt=""/>
+                      <div>
+                      </div>
+                  </div>
+                </div>
+            </div>
+            <div className="scheduled-container">
+              <div>
+                <h2>Upcoming Calls</h2>
+                <div className="upcoming"></div>
+              </div>
+              <div>
+                <h2>Pending</h2>
+                <div className="pending"></div>
+              </div>
+            </div>
+          </div>
         </main>
       </div>
     )

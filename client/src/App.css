@@ -235,6 +235,78 @@ html {
   border: 1px solid maroon;
 }
 
+.home-main {
+  padding-top: 100px;
+  color: white;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.match-container {
+  height: 500px;
+  max-width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-right: 3rem;
+}
+
+.match-group {
+  display: flex;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  margin-right: 50px;
+}
+
+.like {
+  background-color: #5BC037;
+  border: none;
+  border-radius: 50%;
+  width: 65px;
+  height: 65px;
+  color: white;
+  margin-bottom: 5px;
+  font-size: 30px;
+}
+
+.dislike {
+  background-color: #E24040;
+  border: none;
+  border-radius: 50%;
+  width: 65px;
+  height: 65px;
+  color: white;
+  font-size: 30px;
+}
+
+.match-card {
+  width: 400px;
+  height: 130px;
+  border-radius: 5px;
+  background-color: #4F4C4C;
+}
+
+.scheduled-container {
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 50%;
+  margin-left: 3rem;
+  margin-top: -60px;
+}
+
+.upcoming, .pending {
+  height: 200px;
+  width: 450px;
+  margin-top: -10px;
+  background-color: maroon;
+}
+
 @media (max-width: 850px) {
 
   .landing-main {
