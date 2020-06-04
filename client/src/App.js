@@ -104,9 +104,9 @@ class HomePage extends Component {
       await localStorage.setItem("match3", this.getMatchID());
     }
 
-    const m1 = await this.getMatchInfo(this.state.match1);
-    const m2 = await this.getMatchInfo(this.state.match2);
-    const m3 = await this.getMatchInfo(this.state.match3);
+    const m1 = await this.getMatchInfo(localStorage.getItem("match1"));
+    const m2 = await this.getMatchInfo(localStorage.getItem("match2"));
+    const m3 = await this.getMatchInfo(localStorage.getItem("match3"));
 
     this.setState({
       match1user: m1,
@@ -126,6 +126,7 @@ class HomePage extends Component {
   }
 
   getMatchInfo = async (id) => {
+
     const response = await fetch(api.testbase + api.handlers.userInfo + id.toString(), {
       method: "GET",
       headers: {
