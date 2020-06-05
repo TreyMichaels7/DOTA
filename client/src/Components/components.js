@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, Fragment } from 'react';
 import { Button,  Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
@@ -76,7 +76,7 @@ export class MatchCard extends Component {
                 <p>{this.props.matchInfo.firstName + "" + this.props.matchInfo.lastName}</p>
               </div>
               <div className="match-button-container">
-                <ProfileModal buttonLabel="View More" matchInfo={this.props.matchInfo}
+                <ProfileModal buttonLabel="View Profile" matchInfo={this.props.matchInfo}
                   className="match-profile-modal"/>
               </div>
           </div>
@@ -115,7 +115,7 @@ const ProfileModal = (props) => {
   const toggle = () => setModal(!modal);
 
   return (
-    <div>
+    <Fragment>
       <Button className="edit-button" onClick={toggle}>{buttonLabel}</Button>
       <Modal isOpen={modal} toggle={toggle} className={className}>
         <ModalHeader className="modal-escape" toggle={toggle}></ModalHeader>
@@ -147,7 +147,7 @@ const ProfileModal = (props) => {
         <ModalFooter>
         </ModalFooter>
       </Modal>
-    </div>
+    </Fragment>
   );
 }
 
