@@ -49,7 +49,6 @@ export class LandingPage extends Component {
       const user = await response.json();
       localStorage.setItem("User", JSON.stringify(user));
       this.props.setUser(user);
-      alert("Logging in...");
       return <Redirect to ="/home"/>
     }
    
@@ -63,8 +62,8 @@ export class LandingPage extends Component {
           <h1 className="landing-title">Dating on the Ave</h1>
           <h2 className="landing-subtitle">The Exclusive Dating Platform for UW Students</h2>
           <div className="sign-in">
-            <Input type="email" name="email" className="input-field" value={this.state.email} onChange={this.handleChange} placeholder="Ex: 123@uw.edu"/>
-            <Input type="password" name="password" className="input-field" value={this.state.password} onChange={this.handleChange} placeholder="Min 6 Characters" minLength="6"/>
+            <Input type="email" name="email" className="input-field" value={this.state.email} onChange={this.handleChange} placeholder="Email or Username"/>
+            <Input type="password" name="password" className="input-field" value={this.state.password} onChange={this.handleChange} placeholder="Password" minLength="6"/>
             <span className="sign-in-button" >
               <span className="landing-links" onClick={this.signIn}>Sign In</span>
             </span>

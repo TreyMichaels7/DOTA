@@ -29,7 +29,7 @@ export class NavBar extends Component {
               </div>
               <div className={this.state.expanded ? "expanded" : "hidden"}>
                 <Link className="nav-links" to="/profile">Profile</Link>
-                <Link className="nav-links" to="/home">Home</Link>
+                {/* <Link className="nav-links" to="/home">Home</Link> */}
                 <span onClick={this.props.signOut}>
                     <span className="nav-links" >Sign Out</span>
                 </span>
