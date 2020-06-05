@@ -1,16 +1,65 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, NavLink, Switch, Redirect } from 'react-router-dom';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap'
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { NavBar, MatchCard, UpcomingRow, PendingRow } from './Components/components';
+import { CreateProfilePage } from './Pages/CreateProfilePage';
+import { LandingPage } from './Pages/LandingPage';
+import { EditProfilePage } from './Pages/EditProfilePage';
+import { ProfilePage } from './Pages/ProfilePage';
 import './App.css';
+
+import api from './Constants/APIEndpoints';
 
 class App extends Component {
   
   constructor(props){
     super(props);
     this.state = {
-
+      authToken: localStorage.getItem("Authorization") || null,
+      user: localStorage.getItem("User") || null,
+      loggedIn: localStorage.getItem("Logged-In") || false
     }
+    console.log(this.state.user);
+
+  }
+
+  /**
+  * @description sets the user
+  */
+  setUser = (user) => {
+    this.setState({ 
+      authToken: localStorage.getItem("Authorization"),
+      user: localStorage.getItem("User"),
+      loggedIn: true
+    });
+    console.log("Logged In!");
+    console.log(this.state.authToken);
+    console.log(this.state.user);
+    console.log(this.state.loggedIn);
+  }
+
+  signOut = async (e) => {
+    console.log("HELLO!");
+    this.setState({
+      authToken: null,
+      user: null,
+      loggedIn: false
+    });
+
+    const response = await fetch(api.testbase + api.handlers.EndSession, {
+      method: "DELETE",
+      headers: ({
+        "Authorization": this.state.authToken
+      })
+    });
+
+    if (response.status >= 300) {
+      const error = await response.text();
+      console.log(error);
+      return;
+    }
+
+    localStorage.clear();
+    alert("You have been logged out!");
   }
 
   render() {
@@ -18,12 +67,12 @@ class App extends Component {
       <Router>
         <div>
           <Switch>
-            <Route exact path='/'><LandingPage/></Route>
-            <Route path='/home'><HomePage/></Route>
-            <Route path='/register'><CreateProfilePage/></Route>
-            <Route path='/profile'><ProfilePage/></Route>
-            <Route path='/edit'><EditProfilePage/></Route>
-            <Redirect to ='/' />
+            <Route exact path='/' render={(props) => <LandingPage {...props} loggedIn={this.state.loggedIn} setUser={this.setUser}/>}></Route>
+            <Route path='/home' render={(props) => <HomePage {...props} loggedIn={this.state.loggedIn} signOut={this.signOut}/>}></Route>
+            <Route path='/register' render={(props) => <CreateProfilePage {...props} setUser={this.setUser} loggedIn={this.state.loggedIn}/>}></Route>
+            <Route path='/profile' render={(props) => <ProfilePage {...props} loggedIn={this.state.loggedIn} signOut={this.signOut}/>}></Route>
+            <Route path='/edit' render={(props) => <EditProfilePage {...props} loggedIn={this.state.loggedIn} user={this.state.user} auth={this.state.authToken} setUser={this.setUser}/>}></Route>
+            <Redirect to = '/' />
           </Switch>
         </div>
       </Router>
@@ -32,283 +81,342 @@ class App extends Component {
 
 }
 
-class LandingPage extends Component {
-  render() {
-    return (
-      <main className="landing-main">
-        <h1 className="landing-title">Dating on the Ave</h1>
-        <h2 className="landing-subtitle">The Exclusive Dating Platform for UW Students</h2>
-        <div className="sign-in">
-          <input type="email" className="input-field" placeholder="Ex: 123@uw.edu"/>
-          <input type="password" className="input-field" placeholder="Min 6 Characters" minLength="6"/>
-          <span className="sign-in-button">
-            <Link className="landing-links" to="/home">Sign In</Link>
-          </span>
-          <p className="landing-text">--Or--</p>
-          <p className="landing-text">Don't Have an Account?</p>
-          <span className="sign-up-button">
-            <Link className="landing-links" to="/register">Sign Up with a Valid UW Email</Link>
-          </span>
-        </div>
-      </main>
-    )
-  }
-}
-
-class CreateProfilePage extends Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      major: "",
-      pronouns: "",
-      bio: "",
-      gender: "male",
-      preference: "Men",
-      uploadProfile: "",
-      completed: false
-    }
-  }
-
-  handleChange = (event) => {
-    let val = event.target.value;
-    this.setState({
-        [event.target.name]: val
-    });
-    if (this.state.firstName !== "" && this.state.lastName !== "" && this.state.email !== "" && this.state.password !== "") {
-      this.setState({
-        completed: true
-      })
-    }
-  }
-
-  submitForm = () => {
-    if (this.state.firstName === "" || this.state.lastName === "" || this.state.email === "" || this.state.password === "") {
-      alert("Error! Some required fields were not completed");
-    } else {
-      alert("form submitted!");
-    }
-  }
-
-  render() {
-    return (
-      <main className="register-main">
-        <h1 className="register-title">Create Your Profile</h1>
-        <Form className="register-form">
-          <FormGroup className="form-group">
-            <Label className="field-title" for="FName">First Name*:</Label>
-            <Input type="text" name="firstName" id="FName" className="input-field" placeholder="First Name" maxLength="128" value={this.state.firstName} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="LName">Last Name*:</Label>
-            <Input type="text" name="lastName" id="LName" className="input-field" placeholder="Last Name" maxLength="128" value={this.state.lastName} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="exampleEmail">Email*:</Label>
-            <Input type="email" name="email" id="exampleEmail" className="input-field" placeholder="123@uw.edu" value={this.state.email} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="examplePassword">Password*:</Label>
-            <Input type="password" name="password" id="examplePassword" className="input-field" placeholder="Min 6 Characters" minLength="6" maxLength="16" value={this.state.password} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="Major">Major/Intended Major:</Label>
-            <Input type="text" name="major" id="major" className="input-field" maxLength="128" value={this.state.major} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="pronouns">Pronouns:</Label>
-            <Input type="text" name="pronouns" id="pronouns" className="input-field" maxLength="60" value={this.state.pronouns} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="bio">Bio:</Label>
-            <Input type="textarea" name="bio" id="bio" className="input-field" placeholder="Max 300 characters" maxLength="300" value={this.state.bio} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="Gender">Gender*:</Label>
-            <Input type="select" name="gender" id="gender" className="input-field white-field" value={this.state.gender} onChange={this.handleChange}>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
-            </Input>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="preference">Interested In*:</Label>
-            <Input type="select" name="preference" id="preference" className="input-field white-field" value={this.state.preference} onChange={this.handleChange}>
-              <option>Men</option>
-              <option>Women</option>
-              <option>Other</option>
-            </Input>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="uploadProfile">Upload Profile</Label>
-            <Input type="file" name="uploadProfile" id="profilePic" className="input-field white-field" value={this.state.uploadProfile} onChange={this.handleChange}/>
-          </FormGroup>
-        </Form>
-        <div className="register-button-group">
-          <span className="sign-up-button">
-              <Link className="landing-links" onClick={this.submitForm} to={this.state.completed ? "/home" : "/register"}>Submit</Link>
-          </span>
-          <span className="sign-up-button">
-              <Link className="landing-links" to="/">Back</Link>
-          </span>
-        </div>
-      </main>
-    )
-  }
-}
-
-class EditProfilePage extends Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      major: "",
-      pronouns: "",
-      bio: "",
-      gender: "male",
-      preference: "Men",
-      uploadProfile: "",
-    }
-  }
-
-  handleChange = (event) => {
-    let val = event.target.value;
-    this.setState({
-        [event.target.name]: val
-    });
-  }
-
-  submitForm = () => {
-
-  }
-
-  render() {
-    return (
-      <main className="register-main">
-        <h1 className="register-title">Edit Profile</h1>
-        <Form className="register-form">
-          <FormGroup className="form-group">
-            <Label className="field-title" for="FName">First Name*:</Label>
-            <Input type="text" name="firstName" id="FName" className="input-field" placeholder="First Name" maxLength="128" value={this.state.firstName} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="LName">Last Name*:</Label>
-            <Input type="text" name="lastName" id="LName" className="input-field" placeholder="Last Name" maxLength="128" value={this.state.lastName} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="exampleEmail">Email*:</Label>
-            <Input type="email" name="email" id="exampleEmail" className="input-field" placeholder="123@uw.edu" value={this.state.email} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="examplePassword">Password*:</Label>
-            <Input type="password" name="password" id="examplePassword" className="input-field" placeholder="Min 6 Characters" minLength="6" maxLength="16" value={this.state.password} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="Major">Major/Intended Major:</Label>
-            <Input type="text" name="major" id="major" className="input-field" maxLength="128" value={this.state.major} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="pronouns">Pronouns:</Label>
-            <Input type="text" name="pronouns" id="pronouns" className="input-field" maxLength="60" value={this.state.pronouns} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="bio">Bio:</Label>
-            <Input type="textarea" name="bio" id="bio" className="input-field" placeholder="Max 300 characters" maxLength="300" value={this.state.bio} onChange={this.handleChange}/>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="Gender">Gender*:</Label>
-            <Input type="select" name="gender" id="gender" className="input-field white-field" value={this.state.gender} onChange={this.handleChange}>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
-            </Input>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="preference">Interested In*:</Label>
-            <Input type="select" name="preference" id="preference" className="input-field white-field" value={this.state.preference} onChange={this.handleChange}>
-              <option>Men</option>
-              <option>Women</option>
-              <option>Other</option>
-            </Input>
-          </FormGroup>
-          <FormGroup className="form-group">
-            <Label className="field-title" for="uploadProfile">Upload Profile</Label>
-            <Input type="file" name="uploadProfile" id="profilePic" className="input-field white-field" value={this.state.uploadProfile} onChange={this.handleChange}/>
-          </FormGroup>
-        </Form>
-        <div className="register-button-group">
-          <span className="sign-up-button">
-              <Link className="landing-links" onClick={this.submitForm} to="/profile">Submit</Link>
-          </span>
-          <span className="sign-up-button">
-              <Link className="landing-links" to="/profile">Back</Link>
-          </span>
-        </div>
-      </main>
-    )
-  }
-}
-
-
 class HomePage extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      matches: [],
+      likes: [],
+      upcoming: [],
+      userList: {},
+      isLoaded: false
+    }
+  }
+
+  async componentDidMount() {
+
+    const upcoming = await this.getUpcoming();
+    const matches = await this.getMatches();
+    
+    this.getMatches()
+    .then((response) => {
+      console.log(response);
+      this.setState({
+        matches: response.matches, likes: response.likes
+      })
+    })
+
+    this.getUpcoming()
+    .then((response) => {
+      console.log(response);
+      this.setState({
+        upcoming: response.upcoming
+      })
+    });
+
+    let upcomingArray = upcoming.upcoming;
+
+    let formattedUpcoming = [];
+    for (let upcoming of upcomingArray) {
+      formattedUpcoming.push(upcoming.matchId);
+    }
+    console.log(formattedUpcoming);
+
+    let fullList = matches.likes.concat(matches.matches);
+    fullList = fullList.concat(formattedUpcoming);
+    //fullList.concat(upcoming.upcoming);
+    const userList = await this.getUserList(fullList);
+    this.setState({userList: userList, isLoaded: true});
+
+    console.log(userList);
+    
+  }
+
+  /*
+  getMatchID = () => {
+    let id = Math.floor(Math.random() * 9) + 1; 
+    while (id === JSON.parse(localStorage.getItem("User")).id || id === localStorage.getItem("match1")
+     || id === localStorage.getItem("match2") || id === localStorage.removeItem("match3")) {
+      id = Math.floor(Math.random() * 9) + 1; 
+    }
+    return id;
+  }
+  */
+ 
+  getUserList = async (idList) => {
+    let userObj = {};
+    for (let i = 0; i < idList.length; i++) {
+      let userInfo = await this.getMatchInfo(idList[i]);
+      userObj[idList[i]] = userInfo;
+      
+    } 
+    console.log(userObj);
+    return userObj;
+  }
+
+  getMatchInfo = async (id) => {
+
+    const response = await fetch(api.testbase + api.handlers.userInfo + id.toString(), {
+      method: "GET",
+      headers: {
+        "Authorization": localStorage.getItem("Authorization")
+      }
+    })
+
+    if (response.status >= 300) {
+      const error = await response.text();
+      console.log(error);
+      return;
+    }
+
+    const foundUser = await response.json();
+    return foundUser;
+
+  }
+
+  // /v1/likes, POST Request, used to generate a new like for the current user
+  likeSomeone = async(id) => {
+    let body = {
+      userId: JSON.parse(localStorage.getItem("User"))["id"],
+      matchId: id
+    }
+    const response = await fetch("https://chatroom.kelden.me/v1/likes", {
+      method: "POST",
+      headers: {
+        "x-user": localStorage.getItem("User"),
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+
+    if (response.status === 202) {
+      let roomBody = {
+        user1: body.userId,
+        user2: body.matchId
+      }
+      console.log(roomBody);
+      this.createRoom(roomBody);
+      console.log("Chatroom Created!");
+    }
+
+    console.log(response);
+    console.log("Successfully liked!");
+    window.location.reload();
+
+  }
+
+  // /v1/matches, GET Request, used to show current matches for the current user.
+  // Tested and works
+  getMatches = async() => {
+    const response = await fetch("https://chatroom.kelden.me/v1/matches", {
+      method: "GET",
+      headers: {
+        "x-user": localStorage.getItem("User")
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+    const matches = await response.json();
+    console.log(matches);
+    return matches;
+  }
+
+  // /v1/matches, POST Request, used to generate a new match
+  // Tested and works
+  newMatch = async(id) => {
+      let body = {
+        userId: JSON.parse(localStorage.getItem("User"))["id"],
+        matchId: id
+      }
+      const response = await fetch("https://chatroom.kelden.me/v1/matches", {
+        method: "POST",
+        headers: {
+          "x-user": localStorage.getItem("User"),
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+      .catch((error) => {
+        console.log(error);
+        return;
+      });
+      console.log(response);
+      console.log("Successfully matched!");
+  }
+
+  // Tested and works
+  deleteMatch = async(id) => {
+    let body = {
+      userId: JSON.parse(localStorage.getItem("User"))["id"],
+      matchId: id
+    }
+
+    await fetch("https://chatroom.kelden.me/v1/matches", {
+      method: "DELETE",
+      headers: {
+        "x-user": localStorage.getItem("User"),
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+    
+    console.log(body);
+    console.log("Successfully deleted");
+  } 
+
+  // /v1/room, GET Request, used to show current matches for the current user.
+  // Tested and works
+  getRooms = async () => {
+    const response = await fetch("https://chatroom.kelden.me/v1/room", {
+      method: "GET",
+      headers: {
+        "x-user": localStorage.getItem("User")
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+    const rooms = await response.json();
+    console.log(rooms);
+  }
+
+  // /v1/room, POST Request, used to create a new chatroom for the current user if two users mutually like each oterh.
+  createRoom = async (body) => {
+    
+    // const response = await fetch("https://chatroom.kelden.me/v1/room", {
+    //   method: "POST",
+    //   headers: {
+    //     "x-user": localStorage.getItem("User"),
+    //     'Accept': 'application/json, text/plain, */*',
+    //     'Content-Type': 'application/json',
+    //     "Authorization": localStorage.getItem("Authorization")
+    //   },
+    //   body: JSON.stringify(body)
+    // });
+    // if (response.status >= 300) {
+    //   const error = await response.text();
+    //   console.log(error);
+    //   return;
+    // }
+    // const rooms = await response.json();
+    // console.log(rooms);
+
+    var requestOptions = {
+      method: 'POST',
+      headers: {
+        "x-user": localStorage.getItem("User"),
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+      redirect: 'follow'
+    };
+
+    console.log(requestOptions.body);
+    
+    fetch("https://chatroom.kelden.me/v1/room", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+
+    alert("You got a match!!");
+    
+  }
+
+  // /v1/likes, GET Request, used to show likes for the current user and populate the pending container
+  getUpcoming = async() => {
+    const response = await fetch("https://chatroom.kelden.me/v1/upcoming", {
+      method: "GET",
+      headers: {
+        "x-user": localStorage.getItem("User")
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+    const upcoming = await response.json();
+    return upcoming;
+  }
+
   render() {
+    if (!this.props.loggedIn) {
+      return <Redirect to = '/' />;
+    }
+
+    let index = 0;
+    let matchData = this.state.isLoaded ? this.state.matches.map((data) => {
+      index++;
+      if (this.state.userList[data]) {
+        return <MatchCard matchInfo={this.state.userList[data]} like={this.likeSomeone} dislike={this.deleteMatch} key={index}/> 
+      } else {
+        return <div className="match-message">Check Back Tomorrow for New Matches!</div>;
+      }
+    }) : <div>Loading...</div> ;
+
+    if (this.state.matches.length === 0) {
+      matchData = <div className="match-message">Check Back Tomorrow for New Matches!</div>;
+    }
+
+    index = 0;
+    let pendingData = this.state.isLoaded ? this.state.likes.map((data) => {
+      index++;
+      if (this.state.userList[data]) {
+        return <PendingRow name={this.state.userList[data].firstName} key={index}/>;
+      } else {
+        return "Loading...";
+      }
+    }) : <PendingRow name="Loading..."/>;
+
+    index = 0;
+    let upcomingData = this.state.isLoaded ? this.state.upcoming.map((data) => {
+      index++;
+      if (this.state.userList[data.matchId]) {
+        return <UpcomingRow name={this.state.userList[data.matchId].firstName} chatroom={data.roomId} key={index}/>;
+      } else {
+        return "Loading...";
+      }
+    }) : <PendingRow name="Loading..."/>;
+
     return (
       <div>
         <header>
-          <NavBar/>
+          <NavBar signOut={this.props.signOut}/>
         </header>
         <main>
-
-        </main>
-      </div>
-    )
-  }
-}
-
-class ProfilePage extends Component {
-  render() {
-    return (
-      <div>
-        <header>
-          <NavBar/>
-        </header>
-        <main className="profile-main">
-          <div className="profile-block">
-            <h1 className="profile-title">Your Profile</h1>
-            <span className="edit-button">
-                <Link className="edit-links" to="/edit">Edit</Link>
-            </span>
-          </div>
-          <div className="profile-container">
-            <div className="profile-block">
-              <div className="profile-pic">
-                <img src="" alt=""/>
+          <div className="home-main">
+            <div className="match-container">
+                {matchData}
+            </div>
+            <div className="scheduled-container">
+              <div>
+                <h2>Upcoming Calls</h2>
+                <div className="upcoming">
+                    {upcomingData}
+                </div>
               </div>
-              <div className="profile-text">
-                <h2>UserName, 18, M</h2>
-                <p>Studies Computer Science</p>
-                <p>Interested in Females</p>
-                <p>He/Him</p>
+              <div>
+                <h2>Pending Likes</h2>
+                <div className="pending">
+                    {pendingData}
+                </div>
               </div>
             </div>
-            <div className="edit-profile">
-            </div>
-          </div>
-          <div className="profile-bio">
-            <h2 className="profile-subtitle">Bio:</h2>
-            <p className="profile-text">FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY FULL BIOGRAPHY</p>
-          </div>
-          <div className="profile-avail">
-            <h2 className="profile-subtitle">Availability:</h2>
-            <p className="profile-text">Typically free between 10pm-2am</p>
           </div>
         </main>
       </div>
@@ -316,39 +424,9 @@ class ProfilePage extends Component {
   }
 }
 
-class NavBar extends Component {
-
-  constructor(props){
-    super(props);
-    this.state = {
-      expanded: false
-    }
-  }
-
-  expandMenu = () => {
-    this.setState({expanded: !this.state.expanded});
-    console.log(this.state.expanded);
-  }
-
-  render() {
-    return (
-      <nav>
-        <div className="nav-bar">
-          <div>
-            <a className="nav-home-link" href="/home">Dating on the Ave</a>
-          </div>
-          <Button className="nav-profile-pic" onClick={this.expandMenu}>
-            
-          </Button>
-        </div>
-        <div className={this.state.expanded ? "expanded" : "hidden"}>
-          <Link className="nav-links" to="/profile">Profile</Link>
-          <Link className="nav-links" to="/home">Notifications</Link>
-          <Link className="nav-links" to="/">Sign Out</Link>
-        </div>
-      </nav>
-    )
-  }
-}
+/*
+          <button onClick={this.getMatches}>get matches/likes</button>
+          <button onClick={this.getRooms}>get rooms</button>
+*/
 
 export default App;

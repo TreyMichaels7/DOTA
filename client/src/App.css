@@ -5,26 +5,39 @@
   text-align: center;
 }
 
-html {
+html, body {
   background-color: black;
+  width: 100%;
+  height: 100%;
+}
+
+#root, #root > div {
+  height: 100%;
 }
 
 .landing-main {
-  margin: 100px;
+  height: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
+  background: rgb(2,0,36);
+  background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(147,26,67,1) 94%);
 }
 
 .landing-title {
   color: white;
   font-size: 80px;
   font-family: 'Courgette', cursive;
+  margin-top: 10%;
+  margin-bottom: 0;
 }
 
 .landing-subtitle {
   color: white;
   font-size: 24px;
+  margin-bottom: 5%;
+  font-family: 'Courgette', cursive;
+  font-weight: 400;
 }
 
 .landing-text {
@@ -35,11 +48,38 @@ html {
 .landing-links {
   color: white;
   text-decoration: none;
-  border: 1px solid white;
-  background-color: grey;
-  padding: 7px;
+  background-color: rgba(150,150,150,0.5);
+  padding: 10px 15px;
+  border-radius: 2.5px;
+  cursor: pointer;
+  transition: .2s ease-in-out;
 }
 
+.landing-links:hover {
+  background-color: rgba(150,150,150,.75);
+}
+
+select {
+  box-sizing: content-box;
+  padding: 5px 5px;
+  border-radius: 2.5px;
+  opacity: 0.8;
+}
+
+input[type=email], input[type=password], input[type=text], textarea {
+  text-decoration: none;
+  background-color: rgba(255,255,255,0.8);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 2.5px;
+  transition: .2s ease-in-out;
+}
+
+input[type=email]:focus, input[type=password]:focus, input[type=email]:hover, input[type=password]:hover, input[type=text]:focus, input[type=text]:hover, textarea:hover, textarea:focus {
+  outline: none;
+  background-color: rgba(255,255,255,0.95);
+}
+ 
 .sign-in-button {
   margin-top: 2em;
   margin-bottom: 1em;
@@ -57,6 +97,10 @@ html {
   align-items: center;
 }
 
+.sign-in > input {
+  margin: 5px;
+}
+
 .input-field {
   width: 200px;
   height: 25px;
@@ -67,17 +111,20 @@ html {
 }
 
 .register-main {
-  margin: 100px;
+  height: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
-  align-items: center;
+  background: rgb(2,0,36);
+  background: linear-gradient(180deg, rgba(2,0,36,1) 0%, rgba(147,26,67,1) 94%);
 }
 
 .register-title {
   color: white;
   font-size: 24px;
   font-family: 'Courgette', cursive;
+  margin-top: 10%;
+  margin-bottom: 1em;
 }
 
 .register-form {
@@ -101,44 +148,66 @@ html {
 }
 
 .nav-bar {
+  position: relative;
   display: flex;
   justify-content: space-between;
   padding: 2em;
+  height: 40px; 
+  background-color: #181818;
+}
+
+.nav-button {
+  border: 3px solid black;
+  border-radius: 50%;
   height: 40px;
-  background-color: white;
-  vertical-align: center;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-profile-pic {
+  border: 2px solid #E91E63;
   border-radius: 50%;
   background-color: white;
-  border: 3px solid black;
   height: 40px;
   width: 40px;
 }
 
 .nav-home-link {
-  color: black;
+  color: white;
   font-size: 40px;
   font-family: 'Courgette', cursive;
   text-decoration: none;
+  transition: .2s ease-in-out;
+}
+
+.nav-home-link:hover {
+  color: #E91E63;
 }
 
 .nav-links {
-  color: black;
+  color: white;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-links:hover {
+  color: #E91E63;
 }
 
 .expanded {
-  background-color: grey;
+  position: absolute;
+  background-color: rgb(46, 46, 46);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  width: 100px;
-  height: 100px;
-  float: right;
-  clear: both;
+  width: 120px;
+  height: 80px;
+  top: 85px;
+  right: 30px;
+  border-radius: 2.5px;
 }
 
 .hidden {
@@ -154,17 +223,16 @@ html {
 }
 
 .profile-title {
-  margin-left: 2em;
-  margin-right: 2em;
+  margin-left: 1em;
+  margin-right: 1em;
   font-size: 36px;
   color: white;
 }
 
 .profile-main {
-  margin-top: 100px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  height: 600px;
 }
 
 .profile-text {
@@ -172,11 +240,13 @@ html {
 }
 
 .profile-bio {
+  width: calc(100% - 10em);
+  margin-left: 2em;
+  margin-top: 1em;
+  padding: 20px 40px;
+  border-radius: 2.5px;
+  background-color: #181818;
   color: white;
-  margin-left: 4em;
-  margin-left: 4em;
-  margin-bottom: 4em;
-  height: 75px;
 }
 
 .profile-avail {
@@ -188,22 +258,22 @@ html {
 
 .profile-subtitle {
   font-size: 30px;
+  margin: 0;
 }
 
 .profile-container {
-  width: 80%;
-  margin-left: 4em;
+  width: calc(100% - 10em);
+  margin-left: 2em;
   display: flex;
   justify-content: space-between;
+  padding: 20px 40px;
+  border-radius: 2.5px;
+  background-color: #181818;
 }
 
 .profile-block {
   display: flex;
   align-items: center;
-}
-
-.edit-profile {
-
 }
 
 .edit-links {
@@ -212,16 +282,208 @@ html {
 }
 
 .edit-button {
+  padding: 10px 20px;
+  border-radius: 2.5px;
+  background-color: rgba(233, 30, 99, 0.5);
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.edit-button:hover {
+  background-color: rgba(233, 30, 99, 0.75);
+}
+
+.home-main {
+  padding-top: 100px;
+  color: white;
+  width: calc(100% - 2em);
+  margin-left: 1em;
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 100px;
-  height: 50px;
-  font-size: 20px;
-  background-color: maroon;
-  color: white;
-  border: 1px solid maroon;
 }
+
+.match-container {
+  height: 500px;
+  min-width: 50%;
+  margin-left: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.match-group {
+  display: flex;
+  min-width: 50%;
+  width: 100%;
+}
+button {
+  border: none;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  margin-right: 1em;
+}
+
+.like {
+  background-color: #5BC037;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: white;
+  margin-bottom: 5px;
+  font-size: 30px;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.dislike {
+  background-color: #E24040;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.match-card {
+  min-width: 400px;
+  width: 100%;
+  height: 130px;
+  border-radius: 2.5px;
+  background-color: #181818;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.match-profile {
+  border: 3px solid black;
+  border-radius: 50%;
+  background-color: white;
+  height: 100px;
+  width: 100px;
+}
+
+.match-button-container {
+  position: absolute;
+  top: 0px;
+  right: 0;
+}
+
+.match-profile-modal {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  color: white;
+  background-color: black;
+}
+
+.close {
+  margin-left: 1em;
+  width: 40px;
+  height: 40px;
+  background-color: #E91E63;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.modal-header {
+  font-size: 24px;
+}
+
+.match-profile-container {
+  display: flex;
+  justify-content: center;
+  margin-right: 2rem;
+  margin-left: 1rem;
+}
+
+.match-content {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.match-message {
+  color: white;
+}
+
+.scheduled-container {
+  width: 50%;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 50%;
+  margin-top: -60px;
+}
+
+.upcoming, .pending {
+  height: 200px;
+  min-width: 450px;
+  width: 100%;
+  margin-top: -10px;
+  background-color: #181818;
+  border-top: 2.5px solid #E91E63;
+  padding: 20px;
+  border-radius: 0 0 2.5px 2.5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+}
+
+.chatroom-button {
+  background-color: rgba(233, 30, 99, 0.75);
+  font-size: .8em;
+  font-weight: 600;
+  color: white;
+  border-radius: 2.5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.2s ease-in-out;
+}
+
+.chatroom-button:hover {
+  background-color: rgba(233, 30, 99, 0.95);
+}
+
+.upcoming-row {
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(255,255,255,.1);
+  width: 98%;
+  display: flex;
+  padding: 10px 5px 10px 20px;
+  margin-bottom: 5px;
+  border-radius: 2.5px;
+}
+
+.pending-row {
+  background-color: rgba(255,255,255,.1);
+  width: 95%;
+  display: flex;
+  padding: 10px 20px;
+  margin-bottom: 5px;
+  border-radius: 2.5px;
+}
+
+/* .pending-row:hover {
+  background-color: rgba(255,255,255,.2);
+  cursor: pointer;
+} */
 
 @media (max-width: 850px) {
 
@@ -259,4 +521,12 @@ html {
   .nav-home-link {
     font-size: 30px;
   }
+}
+
+.liked {
+  border: 5px solid #5BC037;
+}
+
+.hidden {
+  display: none;
 }

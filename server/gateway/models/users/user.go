@@ -43,7 +43,7 @@ type NewUser struct {
 	Bio       string `json:"bio"`
 	Gender    int32  `json:"gender"`
 	Sexuality int32  `json:"sexuality"`
-	PhotoURL  string `json:"PhotoURL"`
+	PhotoURL  string `json:"photoURL"`
 }
 
 //Updates represents allowed updates to a user profile
@@ -51,7 +51,7 @@ type Updates struct {
 	Bio       string `json:"bio"`
 	Gender    int32  `json:"gender"`
 	Sexuality int32  `json:"sexuality"`
-	PhotoURL  string `json:"PhotoURL"`
+	PhotoURL  string `json:"photoURL"`
 }
 
 //Validate validates the new user and returns an error if
