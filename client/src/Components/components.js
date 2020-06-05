@@ -43,18 +43,21 @@ export class MatchCard extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        hidden: false,
         liked: false,
+        hidden: false,
+        matchInfo: null
       }
     }
 
     like = () => {
-      this.setState({liked: true});
       this.props.like(this.props.matchInfo.id);
+      this.setState({liked: true});
+      this.props.dislike(this.props.matchInfo.id);
     }
 
     dislike = () => {
-      this.setState({hidden: true, liked: false});
+      this.props.dislike(this.props.matchInfo.id);
+      this.setState({hidden: true})
     }
   
     render() {
@@ -160,7 +163,7 @@ export class UpcomingRow extends Component {
     return (
       <div className='upcoming-row'>
         <div>{this.props.name || "loading"}</div>
-        <div><Button className="chatroom-button">Go To Chatroom</Button></div>
+        <div><a href={"https://chatroom.kelden.me/room/" + this.props.chatroom} className="chatroom-button">Go To Chatroom</a></div>
       </div>
     )
   }

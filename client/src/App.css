@@ -346,6 +346,10 @@ html {
   font-size: 1.2rem;
 }
 
+.match-message {
+  color: white;
+}
+
 .scheduled-container {
   width: 50%;
   height: 500px;
@@ -375,6 +379,7 @@ html {
   border: 1px solid #5BC037;
   border-radius: 10px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .upcoming-row {

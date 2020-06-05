@@ -19,6 +19,7 @@ class App extends Component {
       loggedIn: localStorage.getItem("Logged-In") || false
     }
     console.log(this.state.user);
+
   }
 
   /**
@@ -85,38 +86,54 @@ class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      match1: localStorage.getItem("match1") || null,
-      match2: localStorage.getItem("match2") || null,
-      match3: localStorage.getItem("match3") || null,
-      match1user: null,
-      match2user: null,
-      match3user: null
+      matches: [],
+      likes: [],
+      upcoming: [],
+      userList: {},
+      isLoaded: false
     }
   }
 
   async componentDidMount() {
-    if (!localStorage.getItem("match1")) {
-      await localStorage.setItem("match1", this.getMatchID());
-    }
-    if (!localStorage.getItem("match2")) {
-      await localStorage.setItem("match2", this.getMatchID());
-    }
-    if (!localStorage.getItem("match3")) {
-      await localStorage.setItem("match3", this.getMatchID());
-    }
 
-    const m1 = await this.getMatchInfo(localStorage.getItem("match1"));
-    const m2 = await this.getMatchInfo(localStorage.getItem("match2"));
-    const m3 = await this.getMatchInfo(localStorage.getItem("match3"));
+    const upcoming = await this.getUpcoming();
+    const matches = await this.getMatches();
+    
+    this.getMatches()
+    .then((response) => {
+      console.log(response);
+      this.setState({
+        matches: response.matches, likes: response.likes
+      })
+    })
 
-    this.setState({
-      match1user: m1,
-      match2user: m2,
-      match3user: m3
+    this.getUpcoming()
+    .then((response) => {
+      console.log(response);
+      this.setState({
+        upcoming: response.upcoming
+      })
     });
 
+    let upcomingArray = upcoming.upcoming;
+
+    let formattedUpcoming = [];
+    for (let upcoming of upcomingArray) {
+      formattedUpcoming.push(upcoming.matchId);
+    }
+    console.log(formattedUpcoming);
+
+    let fullList = matches.likes.concat(matches.matches);
+    fullList = fullList.concat(formattedUpcoming);
+    //fullList.concat(upcoming.upcoming);
+    const userList = await this.getUserList(fullList);
+    this.setState({userList: userList, isLoaded: true});
+
+    console.log(userList);
+    
   }
 
+  /*
   getMatchID = () => {
     let id = Math.floor(Math.random() * 9) + 1; 
     while (id === JSON.parse(localStorage.getItem("User")).id || id === localStorage.getItem("match1")
@@ -124,6 +141,18 @@ class HomePage extends Component {
       id = Math.floor(Math.random() * 9) + 1; 
     }
     return id;
+  }
+  */
+ 
+  getUserList = async (idList) => {
+    let userObj = {};
+    for (let i = 0; i < idList.length; i++) {
+      let userInfo = await this.getMatchInfo(idList[i]);
+      userObj[idList[i]] = userInfo;
+      
+    } 
+    console.log(userObj);
+    return userObj;
   }
 
   getMatchInfo = async (id) => {
@@ -146,22 +175,6 @@ class HomePage extends Component {
 
   }
 
-  // /v1/likes, GET Request, used to show likes for the current user and populate the pending container
-  getLikes = async() => {
-    const response = await fetch("https://chatroom.kelden.me/v1/likes", {
-      method: "GET",
-      headers: {
-        "x-user": localStorage.getItem("User")
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      return;
-    });
-    const likes = await response.json();
-    console.log(likes);
-  }
-
   // /v1/likes, POST Request, used to generate a new like for the current user
   likeSomeone = async(id) => {
     let body = {
@@ -181,27 +194,40 @@ class HomePage extends Component {
       console.log(error);
       return;
     });
+
+    if (response.status === 202) {
+      let roomBody = {
+        user1: body.userId,
+        user2: body.matchId
+      }
+      console.log(roomBody);
+      this.createRoom(roomBody);
+      console.log("Chatroom Created!");
+    }
+
     console.log(response);
     console.log("Successfully liked!");
+    window.location.reload();
 
   }
 
   // /v1/matches, GET Request, used to show current matches for the current user.
   // Tested and works
   getMatches = async() => {
-  const response = await fetch("https://chatroom.kelden.me/v1/matches", {
-    method: "GET",
-    headers: {
-      "x-user": localStorage.getItem("User")
-    }
-  })
-  .catch((error) => {
-    console.log(error);
-    return;
-  });
-  const matches = await response.json();
-  console.log(matches);
-}
+    const response = await fetch("https://chatroom.kelden.me/v1/matches", {
+      method: "GET",
+      headers: {
+        "x-user": localStorage.getItem("User")
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+    const matches = await response.json();
+    console.log(matches);
+    return matches;
+  }
 
   // /v1/matches, POST Request, used to generate a new match
   // Tested and works
@@ -270,32 +296,102 @@ class HomePage extends Component {
   }
 
   // /v1/room, POST Request, used to create a new chatroom for the current user if two users mutually like each oterh.
-  createRoom = async () => {
-    const response = await fetch("https://chatroom.kelden.me/v1/room", {
-      method: "POST",
+  createRoom = async (body) => {
+    
+    // const response = await fetch("https://chatroom.kelden.me/v1/room", {
+    //   method: "POST",
+    //   headers: {
+    //     "x-user": localStorage.getItem("User"),
+    //     'Accept': 'application/json, text/plain, */*',
+    //     'Content-Type': 'application/json',
+    //     "Authorization": localStorage.getItem("Authorization")
+    //   },
+    //   body: JSON.stringify(body)
+    // });
+    // if (response.status >= 300) {
+    //   const error = await response.text();
+    //   console.log(error);
+    //   return;
+    // }
+    // const rooms = await response.json();
+    // console.log(rooms);
+
+    var requestOptions = {
+      method: 'POST',
       headers: {
-        "Authorization": localStorage.getItem("Authorization")
-      }
-    });
-    if (response.status >= 300) {
-      const error = await response.text();
-      console.log(error);
-      return;
-    }
-    const rooms = await response.json();
-    console.log(rooms);
+        "x-user": localStorage.getItem("User"),
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+      redirect: 'follow'
+    };
+
+    console.log(requestOptions.body);
+    
+    fetch("https://chatroom.kelden.me/v1/room", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+
+    alert("You got a match!!");
+    
   }
 
-
+  // /v1/likes, GET Request, used to show likes for the current user and populate the pending container
+  getUpcoming = async() => {
+    const response = await fetch("https://chatroom.kelden.me/v1/upcoming", {
+      method: "GET",
+      headers: {
+        "x-user": localStorage.getItem("User")
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+    const upcoming = await response.json();
+    return upcoming;
+  }
 
   render() {
     if (!this.props.loggedIn) {
       return <Redirect to = '/' />;
     }
 
-    let matchCardOne = this.state.match1user ? <MatchCard matchInfo={this.state.match1user} like={this.likeSomeone}/>  : <div>Loading...</div>
-    let matchCardTwo = this.state.match2user ? <MatchCard matchInfo={this.state.match2user} like={this.likeSomeone}/>  : <div>Loading...</div>
-    let matchCardThree = this.state.match2user ? <MatchCard matchInfo={this.state.match3user} like={this.likeSomeone}/>  : <div>Loading...</div>
+    let index = 0;
+    let matchData = this.state.isLoaded ? this.state.matches.map((data) => {
+      index++;
+      if (this.state.userList[data]) {
+        return <MatchCard matchInfo={this.state.userList[data]} like={this.likeSomeone} dislike={this.deleteMatch} key={index}/> 
+      } else {
+        return <div className="match-message">Check Back Tomorrow for New Matches!</div>;
+      }
+    }) : <div>Loading...</div> ;
+
+    if (this.state.matches.length === 0) {
+      matchData = <div className="match-message">Check Back Tomorrow for New Matches!</div>;
+    }
+
+    index = 0;
+    let pendingData = this.state.isLoaded ? this.state.likes.map((data) => {
+      index++;
+      if (this.state.userList[data]) {
+        return <PendingRow name={this.state.userList[data].firstName} key={index}/>;
+      } else {
+        return "Loading...";
+      }
+    }) : <PendingRow name="Loading..."/>;
+
+    index = 0;
+    let upcomingData = this.state.isLoaded ? this.state.upcoming.map((data) => {
+      index++;
+      if (this.state.userList[data.matchId]) {
+        return <UpcomingRow name={this.state.userList[data.matchId].firstName} chatroom={data.roomId} key={index}/>;
+      } else {
+        return "Loading...";
+      }
+    }) : <PendingRow name="Loading..."/>;
 
     return (
       <div>
@@ -305,41 +401,32 @@ class HomePage extends Component {
         <main>
           <div className="home-main">
             <div className="match-container">
-                {matchCardOne}
-                {matchCardTwo}
-                {matchCardThree}
+                {matchData}
             </div>
             <div className="scheduled-container">
               <div>
                 <h2>Upcoming Calls</h2>
                 <div className="upcoming">
-                    <UpcomingRow chatroom="" name="Ashley Li"/>
-                    <UpcomingRow chatroom="" name="Jenny Kim"/>
-                    <UpcomingRow chatroom="" name="Kathy Nguyen"/>
-                    <UpcomingRow chatroom="" name="Karen White"/>
-                    <UpcomingRow chatroom="" name="Hannah Montana"/>
-                    <UpcomingRow chatroom="" name="Maggie Gyllenhall"/>
-                    <UpcomingRow chatroom="" name="Lena Lu"/>
+                    {upcomingData}
                 </div>
               </div>
               <div>
                 <h2>Pending Likes</h2>
                 <div className="pending">
-                    <PendingRow name="Ashley Madison"/>
-                    <PendingRow name="Lisa Ann"/>
-                    <PendingRow name="Anna Kendricks"/>
-                    <PendingRow name="Jamie Chung"/>
+                    {pendingData}
                 </div>
               </div>
             </div>
           </div>
-          <button onClick={this.getMatches}>get matches</button>
-          <button onClick={this.getLikes}>get likes</button>
-          <button onClick={this.getRooms}>get rooms</button>
         </main>
       </div>
     )
   }
 }
+
+/*
+          <button onClick={this.getMatches}>get matches/likes</button>
+          <button onClick={this.getRooms}>get rooms</button>
+*/
 
 export default App;
