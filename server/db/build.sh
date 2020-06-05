@@ -1,16 +1,16 @@
-export MYSQL_ROOT_PASSWORD="treydb"
+export MYSQL_ROOT_PASSWORD="dating123"
+export MYSQL_DATABASE="usersdb"
 
 docker build -t treymichaels7/db .
  
-docker rm -f UsersDB
+docker rm -f DOTADB
 
 docker run -d \
 -p 3306:3306 \
---name UsersDB \
+--name DOTADB \
 -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD \
--e MYSQL_DATABASE=DOTAdb \
+-e MYSQL_DATABASE=$MYSQL_DATABASE \
 treymichaels7/db
 
 docker push treymichaels7/db
 
-# docker run -it --rm mysql sh -c "mysql -hUsersDB -uroot -ptreydb"

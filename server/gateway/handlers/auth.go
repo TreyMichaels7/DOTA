@@ -2,14 +2,16 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
+	"path"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/DOTA/server/gateway/models/users"
-	"github.com/DOTA/server/gateway/sessions"
+	"DOTA/server/gateway/models/users"
+	"DOTA/server/gateway/sessions"
 )
 
 //Accepts Post Requests to create a new user and session, Content-Type must be application/json
@@ -26,12 +28,16 @@ func (hc *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) {
 
 		user, err := newUser.ToUser()
 		if err != nil {
-			http.Error(w, "Error validating user info" + err.Error(), http.StatusBadRequest)
+			http.Error(w, "Error validating user info: "+err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		insertedUser, _ := hc.UserStore.Insert(user)
-
+		insertedUser, insertError := hc.UserStore.Insert(user)
+		if insertError != nil {
+			errMsg := fmt.Sprintf("error inserting User to database %v", insertError)
+			http.Error(w, errMsg, http.StatusBadRequest)
+			return
+		}
 
 		sessionState := &SessionState{
 			Time: time.Now(),
@@ -40,14 +46,21 @@ func (hc *HandlerContext) UsersHandler(w http.ResponseWriter, r *http.Request) {
 
 		_, err = sessions.BeginSession(hc.SigningKey, hc.SessionStore, sessionState, w)
 		if err != nil {
-			http.Error(w, "Unauthorized user:" + err.Error(), http.StatusUnauthorized)
+			http.Error(w, "Unauthorized user: "+err.Error(), http.StatusUnauthorized)
 			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
 
-		json.NewEncoder(w).Encode(insertedUser)
+		// json.NewEncoder(w).Encode(insertedUser)
+		enc := json.NewEncoder(w)
+		if err := enc.Encode(insertedUser); err != nil {
+			errMsg := fmt.Sprintf("error encoding User with ID into a JSON %v", err)
+			http.Error(w, errMsg, http.StatusInternalServerError)
+			return
+		}
+
 		return
 	}
 	http.Error(w, "HTTP Response Status:", http.StatusMethodNotAllowed)
@@ -60,7 +73,7 @@ func (hc *HandlerContext) SpecificUserHandler(w http.ResponseWriter, r *http.Req
 	_, err := sessions.GetState(r, hc.SigningKey, hc.SessionStore, sessionState)
 
 	if err != nil {
-		http.Error(w, "Unauthorized user:" + err.Error(), http.StatusUnauthorized)
+		http.Error(w, "Unauthorized user:"+err.Error(), http.StatusUnauthorized)
 		return
 	}
 
@@ -68,7 +81,7 @@ func (hc *HandlerContext) SpecificUserHandler(w http.ResponseWriter, r *http.Req
 	uri := u.RequestURI()
 	uriParts := strings.Split(uri, "/")
 	id := uriParts[len(uriParts)-1]
-	
+
 	var idVal int64
 	idVal, _ = strconv.ParseInt(id, 10, 64)
 
@@ -121,7 +134,7 @@ func (hc *HandlerContext) SessionsHandler(w http.ResponseWriter, r *http.Request
 		user, err := hc.UserStore.GetByEmail(credentials.Email)
 		if err != nil {
 			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
-			return 
+			return
 		}
 
 		if authErr := user.Authenticate(credentials.Password); authErr != nil {
@@ -145,17 +158,29 @@ func (hc *HandlerContext) SessionsHandler(w http.ResponseWriter, r *http.Request
 //Takes DELETE Requests only, closes a specific session.
 func (hc *HandlerContext) SpecificSessionHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "DELETE" {
-		u, _ := url.Parse(r.URL.Path)
-		uri := u.RequestURI()
-		uriParts := strings.Split(uri, "/")
-		id := uriParts[len(uriParts)-1]
-		if !strings.EqualFold(id, "delete") {
-			http.Error(w, "Bad Request", http.StatusForbidden)
+		urlPath := path.Base(r.URL.Path)
+		if urlPath != "mine" {
+			http.Error(w, "Error: Logging out is only supported on currently authenticated user", http.StatusForbidden)
 			return
 		}
-		sessions.EndSession(r, hc.SigningKey, hc.SessionStore)
-		w.Write([]byte ("Signed out"))
+
+		_, getErr := sessions.GetSessionID(r, hc.SigningKey)
+		if getErr != nil {
+			errMsg := fmt.Sprintf("Error: No valid session id found: not currently signed in %v", getErr)
+			http.Error(w, errMsg, http.StatusForbidden)
+			return
+		}
+
+		_, delErr := sessions.EndSession(r, hc.SigningKey, hc.SessionStore)
+		if delErr != nil {
+			errMsg := fmt.Sprintf("Error: There was an issue deleting the current session id %v", delErr)
+			http.Error(w, errMsg, http.StatusForbidden)
+			return
+		}
+
+		w.Write([]byte("signed out"))
+	} else {
+		http.Error(w, "Error: Only DELETE Requests are allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	http.Error(w, "HTTP Response Status:", http.StatusMethodNotAllowed)
 }

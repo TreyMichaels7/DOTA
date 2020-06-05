@@ -3,9 +3,11 @@ package users
 import (
 	"fmt"
 	"net/mail"
+
 	//"strings"
 	"golang.org/x/crypto/bcrypt"
 )
+
 //gravatarBasePhotoURL is the base URL for Gravatar image requests.
 //See https://id.gravatar.com/site/implement/images/ for details
 const gravatarBasePhotoURL = "https://www.gravatar.com/avatar/"
@@ -15,14 +17,14 @@ var bcryptCost = 13
 
 //User represents a user account in the database
 type User struct {
-	ID 		  int64  `json:"id"`
+	ID        int64  `json:"id"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Email     string `json:"-"` //never JSON encoded/decoded
 	PassHash  []byte `json:"-"` //never JSON encoded/decoded
-	Bio		  string `json:"bio"`
-	Gender	  string `json:"gender"`
-	Sexuality string `json:"sexuality"`
+	Bio       string `json:"bio"`
+	Gender    int32  `json:"gender"`
+	Sexuality int32  `json:"sexuality"`
 	PhotoURL  string `json:"photoURL"`
 }
 
@@ -38,17 +40,17 @@ type NewUser struct {
 	LastName  string `json:"lastName"`
 	Email     string `json:"email"`
 	Password  string `json:"password"`
-	Bio		  string `json:"bio"`
-	Gender	  string `json:"gender"`
-	Sexuality string `json:"sexuality"`
+	Bio       string `json:"bio"`
+	Gender    int32  `json:"gender"`
+	Sexuality int32  `json:"sexuality"`
 	PhotoURL  string `json:"PhotoURL"`
 }
 
 //Updates represents allowed updates to a user profile
 type Updates struct {
-	Bio		  string `json:"bio"`
-	Gender	  string `json:"gender"`
-	Sexuality string `json:"sexuality"`
+	Bio       string `json:"bio"`
+	Gender    int32  `json:"gender"`
+	Sexuality int32  `json:"sexuality"`
 	PhotoURL  string `json:"PhotoURL"`
 }
 
@@ -61,12 +63,19 @@ func (nu *NewUser) Validate() error {
 	if len(nu.LastName) == 0 {
 		return fmt.Errorf("Must have a last name")
 	}
-	_, err := mail.ParseAddress(nu.Email) 
+	_, err := mail.ParseAddress(nu.Email)
 	if err != nil {
 		return fmt.Errorf("Must be a valid email address")
 	}
 	if len(nu.Password) < 6 {
 		return fmt.Errorf("Password Length must be at least 6 characters")
+	}
+	if nu.Gender < 1 {
+		return fmt.Errorf("Must have a gender")
+	}
+
+	if nu.Sexuality < 1 {
+		return fmt.Errorf("Must have a sexuality")
 	}
 	return nil
 }
@@ -80,12 +89,12 @@ func (nu *NewUser) ToUser() (*User, error) {
 	}
 	u := &User{
 		FirstName: nu.FirstName,
-		LastName: nu.LastName,
-		Email: nu.Email,
-		Bio: nu.Bio,
-		Gender: nu.Gender,
+		LastName:  nu.LastName,
+		Email:     nu.Email,
+		Bio:       nu.Bio,
+		Gender:    nu.Gender,
 		Sexuality: nu.Sexuality,
-		PhotoURL: nu.PhotoURL,
+		PhotoURL:  nu.PhotoURL,
 	}
 	u.SetPassword(nu.Password)
 	return u, nil
@@ -113,9 +122,9 @@ func (u *User) SetPassword(password string) error {
 //Authenticate compares the plaintext password against the stored hash
 //and returns an error if they don't match, or nil if they do
 func (u *User) Authenticate(password string) error {
-    if err := bcrypt.CompareHashAndPassword(u.PassHash, []byte(password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword(u.PassHash, []byte(password)); err != nil {
 		return err
-    }
+	}
 	return nil
 }
 

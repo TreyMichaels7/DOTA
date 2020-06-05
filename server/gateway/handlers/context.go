@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/DOTA/server/gateway/models/users"
-	"github.com/DOTA/server/gateway/sessions"
+	"DOTA/server/gateway/models/users"
+	"DOTA/server/gateway/sessions"
 )
 
 //A handler context struct that
@@ -12,7 +12,7 @@ import (
 //and verifying SessionIDs, the session store
 //and the user store
 type HandlerContext struct {
-	SigningKey string
+	SigningKey   string
 	SessionStore sessions.Store
-	UserStore users.Store
+	UserStore    users.Store
 }
