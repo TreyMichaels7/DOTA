@@ -1,6 +1,6 @@
 import React, { Component, useState } from 'react';
 import { Button,  Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export class NavBar extends Component {
 
@@ -50,6 +50,7 @@ export class MatchCard extends Component {
 
     like = () => {
       this.setState({liked: true});
+      this.props.like(this.props.matchInfo.id);
     }
 
     dislike = () => {
@@ -145,4 +146,39 @@ const ProfileModal = (props) => {
       </Modal>
     </div>
   );
+}
+
+export class UpcomingRow extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    }
+  }
+
+  render() {
+    return (
+      <div className='upcoming-row'>
+        <div>{this.props.name || "loading"}</div>
+        <div><Button className="chatroom-button">Go To Chatroom</Button></div>
+      </div>
+    )
+  }
+}
+
+export class PendingRow extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    }
+  }
+
+  render() {
+    return (
+      <div className='pending-row'>
+        <div>{this.props.name}</div>
+      </div>
+    )
+  }
 }

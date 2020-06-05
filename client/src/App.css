@@ -352,6 +352,44 @@ html {
   width: 450px;
   margin-top: -10px;
   background-color: maroon;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: auto;
+}
+
+.chatroom-button {
+  font-size: 1.3rem;
+  background-color: #5BC037;
+  color: white;
+  border: 1px solid #5BC037;
+  border-radius: 10px;
+}
+
+.upcoming-row {
+  background-color: #4F4C4C;
+  width: 95%; 
+  height: 15%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem;
+  border-radius: 10px;
+  padding: 0.3rem;
+  font-size: 1.3rem;
+}
+
+.pending-row {
+  background-color: #4F4C4C;
+  width: 95%; 
+  height: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  margin: 0.5rem;
+  font-size: 1.3rem;
+  border-radius: 10px
 }
 
 @media (max-width: 850px) {

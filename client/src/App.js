@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch, Redirect } from 'react-router-dom';
-import { NavBar, MatchCard } from './Components/components';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { NavBar, MatchCard, UpcomingRow, PendingRow } from './Components/components';
 import { CreateProfilePage } from './Pages/CreateProfilePage';
 import { LandingPage } from './Pages/LandingPage';
 import { EditProfilePage } from './Pages/EditProfilePage';
+import { ProfilePage } from './Pages/ProfilePage';
 import './App.css';
 
 import api from './Constants/APIEndpoints';
@@ -169,9 +170,55 @@ class HomePage extends Component {
     */
   }
 
+  getLikes = async() => {
+    const response = await fetch("https://chatroom.kelden.me/v1/likes", {
+      method: "GET",
+      headers: {
+        "x-user": localStorage.getItem("User")
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+    const likes = await response.json();
+    console.log(likes);
+    /*
+    if (response.status >= 300) {
+      const error = await response.text();
+      console.log(error);
+      return;
+    }
+    const matches = await response.json();
+    console.log(matches);
+    */
+  }
+
+  likeSomeone = async(id) => {
+    let body = {
+      userId: JSON.parse(localStorage.getItem("User"))["id"],
+      matchId: id
+    }
+    const response = await fetch("https://chatroom.kelden.me/v1/likes", {
+      method: "POST",
+      headers: {
+        "x-user": localStorage.getItem("User"),
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+    console.log("Successfully liked!");
+
+  }
+
   deleteMatch = async(id) => {
     let body = {
-      userId: 1,
+      userId: JSON.parse(localStorage.getItem("User"))["id"],
       matchId: id
     }
 
@@ -218,9 +265,9 @@ class HomePage extends Component {
       return <Redirect to = '/' />;
     }
 
-    let matchCardOne = this.state.match1user ? <MatchCard matchInfo={this.state.match1user} />  : <div>Loading...</div>
-    let matchCardTwo = this.state.match2user ? <MatchCard matchInfo={this.state.match2user} />  : <div>Loading...</div>
-    let matchCardThree = this.state.match2user ? <MatchCard matchInfo={this.state.match3user} />  : <div>Loading...</div>
+    let matchCardOne = this.state.match1user ? <MatchCard matchInfo={this.state.match1user} like={this.likeSomeone}/>  : <div>Loading...</div>
+    let matchCardTwo = this.state.match2user ? <MatchCard matchInfo={this.state.match2user} like={this.likeSomeone}/>  : <div>Loading...</div>
+    let matchCardThree = this.state.match2user ? <MatchCard matchInfo={this.state.match3user} like={this.likeSomeone}/>  : <div>Loading...</div>
 
     return (
       <div>
@@ -237,91 +284,29 @@ class HomePage extends Component {
             <div className="scheduled-container">
               <div>
                 <h2>Upcoming Calls</h2>
-                <div className="upcoming"></div>
+                <div className="upcoming">
+                    <UpcomingRow chatroom="" name="Ashley Li"/>
+                    <UpcomingRow chatroom="" name="Jenny Kim"/>
+                    <UpcomingRow chatroom="" name="Kathy Nguyen"/>
+                    <UpcomingRow chatroom="" name="Karen White"/>
+                    <UpcomingRow chatroom="" name="Hannah Montana"/>
+                    <UpcomingRow chatroom="" name="Maggie Gyllenhall"/>
+                    <UpcomingRow chatroom="" name="Lena Lu"/>
+                </div>
               </div>
               <div>
-                <h2>Pending</h2>
-                <div className="pending"></div>
+                <h2>Pending Likes</h2>
+                <div className="pending">
+                    <PendingRow name="Ashley Madison"/>
+                    <PendingRow name="Lisa Ann"/>
+                    <PendingRow name="Anna Kendricks"/>
+                    <PendingRow name="Jamie Chung"/>
+                </div>
               </div>
             </div>
           </div>
-        </main>
-      </div>
-    )
-  }
-}
-
-class ProfilePage extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: JSON.parse(localStorage.getItem("User")),
-      gender: "",
-      sexuality: ""
-    }
-  }
-
-  componentDidMount() {
-    this.setGenderAndSexuality();
-  }
-
-  setGenderAndSexuality = () => {
-    if (this.state.user.gender === 1) {
-      this.setState({gender: "Male"});
-    } else if (this.state.user.gender === 2) {
-      this.setState({gender: "Female"});
-    } else {
-      this.setState({gender: "Other"});
-    }
-    console.log(this.state.gender);
-
-    if (this.state.user.sexuality === 1) {
-      this.setState({sexuality: "Men"});
-    } else if (this.state.user.sexuality === 2) {
-      this.setState({sexuality: "Women"});
-    } else {
-      this.setState({sexuality: "other"});
-    }
-    console.log(this.state.sexuality);
-  }
-  
-  render() {
-    
-    if (!this.props.loggedIn) {
-      return <Redirect to = '/' />;
-    }
-
-    return (
-      <div>
-        <header>
-          <NavBar signOut={this.props.signOut}/>
-        </header>
-        <main className="profile-main">
-          <div className="profile-block">
-            <h1 className="profile-title">Your Profile</h1>
-            <span className="edit-button">
-                <Link className="edit-links" to="/edit">Edit</Link>
-            </span>
-          </div>
-          <div className="profile-container">
-            <div className="profile-block">
-              <div>
-                <img className="profile-pic" src={this.state.user.photoURL} alt="profile"/>
-              </div>
-              <div className="profile-text">
-                <h2>{this.state.user.firstName + " " + this.state.user.lastName}</h2>
-                <p>Identifies as {this.state.gender}</p>
-                <p>Interested in {this.state.sexuality}</p>
-              </div>
-            </div>
-            <div className="edit-profile">
-            </div>
-          </div>
-          <div className="profile-bio">
-            <h2 className="profile-subtitle">Bio:</h2>
-            <p className="profile-text">{this.state.user.bio}</p>
-          </div>
+          <button onClick={this.getMatches}>get matches</button>
+          <button onClick={this.getLikes}>get likes</button>
         </main>
       </div>
     )
