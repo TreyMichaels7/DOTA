@@ -181,6 +181,7 @@ class HomePage extends Component {
       console.log(error);
       return;
     });
+    console.log(response);
     console.log("Successfully liked!");
 
   }
@@ -222,6 +223,7 @@ class HomePage extends Component {
         console.log(error);
         return;
       });
+      console.log(response);
       console.log("Successfully matched!");
   }
 

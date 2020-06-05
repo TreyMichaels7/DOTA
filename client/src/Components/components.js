@@ -21,7 +21,7 @@ export class NavBar extends Component {
         <nav>
             <div className="nav-bar">
               <div>
-                  <a className="nav-home-link" href="/home">Dating on the Ave</a>
+                  <Link className="nav-home-link" to="/home">Dating on the Ave</Link>
               </div>
               <Button className="nav-button" onClick={this.expandMenu}>
                   <img className="nav-profile-pic" src={this.state.profileImage} alt="profile"/>
