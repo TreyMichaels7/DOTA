@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const fs = require("fs");
 const express = require('express');
 const socketIO = require("socket.io");
-// const https = require("https"); // HTTPS
-const http = require("http"); // HTTP
+const https = require("https"); // HTTPS
+// const http = require("http"); // HTTP
 
 // Handlers
 const { postRoomHandler, getRoomHandler, getRoomIdHandler, deleteRoomIdHandler } = require('./handlers/room');
@@ -18,21 +18,21 @@ const Match = mongoose.model("Match", matchSchema);
 const Room = mongoose.model("Room", roomSchema);
 
 
-// const options = { // HTTPS
-//     key: fs.readFileSync(process.env.TLSKEY),
-//     cert: fs.readFileSync(process.env.TLSCERT)
-// };
+const options = { // HTTPS
+    key: fs.readFileSync(process.env.TLSKEY),
+    cert: fs.readFileSync(process.env.TLSCERT)
+};
 
-// const port = 443; // HTTPS
-const port = 80; // HTTP
-const mongoEndpoint = "mongodb://localhost:27017/test"; // LOCAL TESTING
-// const mongoEndpoint = "mongodb://mongodemo:27017/test"; // DEPLOY
+const port = 443; // HTTPS
+// const port = 80; // HTTP
+// const mongoEndpoint = "mongodb://localhost:27017/test"; // LOCAL TESTING
+const mongoEndpoint = "mongodb://mongodemo:27017/test"; // DEPLOY
 // console.log(options);
 
 // Set up Express
 const app = express();
-// const httpServer = https.createServer(options, app); // HTTPS
-const httpServer = http.createServer(app); // HTTP
+const httpServer = https.createServer(options, app); // HTTPS
+// const httpServer = http.createServer(app); // HTTP
 const io = socketIO(httpServer);
 
 // Socket Variables
@@ -48,7 +48,6 @@ mongoose.connection.on('error', console.error) // log error if connection fails
     .on('disconnected', connect) // attempt to connect when disconnected
     .once('open', main); // run async function to connect to mysql when the connection is open
 
-// Serve /public folder
 
 const RequestWrapper = (handler, SchemaAndDbForwarder) => {
     return (req, res) => {
