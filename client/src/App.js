@@ -146,30 +146,7 @@ class HomePage extends Component {
 
   }
 
-  getMatches = async() => {
-    const response = await fetch("https://chatroom.kelden.me/v1/matches", {
-      method: "GET",
-      headers: {
-        "x-user": localStorage.getItem("User")
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      return;
-    });
-    const matches = await response.json();
-    console.log(matches);
-    /*
-    if (response.status >= 300) {
-      const error = await response.text();
-      console.log(error);
-      return;
-    }
-    const matches = await response.json();
-    console.log(matches);
-    */
-  }
-
+  // /v1/likes, GET Request, used to show likes for the current user and populate the pending container
   getLikes = async() => {
     const response = await fetch("https://chatroom.kelden.me/v1/likes", {
       method: "GET",
@@ -183,17 +160,9 @@ class HomePage extends Component {
     });
     const likes = await response.json();
     console.log(likes);
-    /*
-    if (response.status >= 300) {
-      const error = await response.text();
-      console.log(error);
-      return;
-    }
-    const matches = await response.json();
-    console.log(matches);
-    */
   }
 
+  // /v1/likes, POST Request, used to generate a new like for the current user
   likeSomeone = async(id) => {
     let body = {
       userId: JSON.parse(localStorage.getItem("User"))["id"],
@@ -216,13 +185,54 @@ class HomePage extends Component {
 
   }
 
+  // /v1/matches, GET Request, used to show current matches for the current user.
+  // Tested and works
+  getMatches = async() => {
+  const response = await fetch("https://chatroom.kelden.me/v1/matches", {
+    method: "GET",
+    headers: {
+      "x-user": localStorage.getItem("User")
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+    return;
+  });
+  const matches = await response.json();
+  console.log(matches);
+}
+
+  // /v1/matches, POST Request, used to generate a new match
+  // Tested and works
+  newMatch = async(id) => {
+      let body = {
+        userId: JSON.parse(localStorage.getItem("User"))["id"],
+        matchId: id
+      }
+      const response = await fetch("https://chatroom.kelden.me/v1/matches", {
+        method: "POST",
+        headers: {
+          "x-user": localStorage.getItem("User"),
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+      .catch((error) => {
+        console.log(error);
+        return;
+      });
+      console.log("Successfully matched!");
+  }
+
+  // Tested and works
   deleteMatch = async(id) => {
     let body = {
       userId: JSON.parse(localStorage.getItem("User"))["id"],
       matchId: id
     }
 
-    const response = await fetch("https://chatroom.kelden.me/v1/matches", {
+    await fetch("https://chatroom.kelden.me/v1/matches", {
       method: "DELETE",
       headers: {
         "x-user": localStorage.getItem("User"),
@@ -240,8 +250,25 @@ class HomePage extends Component {
     console.log("Successfully deleted");
   } 
 
-  /*
-  createRoom = () => {
+  // /v1/room, GET Request, used to show current matches for the current user.
+  // Tested and works
+  getRooms = async () => {
+    const response = await fetch("https://chatroom.kelden.me/v1/room", {
+      method: "GET",
+      headers: {
+        "x-user": localStorage.getItem("User")
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+    const rooms = await response.json();
+    console.log(rooms);
+  }
+
+  // /v1/room, POST Request, used to create a new chatroom for the current user if two users mutually like each oterh.
+  createRoom = async () => {
     const response = await fetch("https://chatroom.kelden.me/v1/room", {
       method: "POST",
       headers: {
@@ -254,11 +281,10 @@ class HomePage extends Component {
       return;
     }
     const rooms = await response.json();
+    console.log(rooms);
   }
 
-            <button onClick={() => this.deleteMatch(3)}>delete match</button>
-          <button onClick={this.getMatches}>get matches</button>
-  */
+
 
   render() {
     if (!this.props.loggedIn) {
@@ -307,6 +333,7 @@ class HomePage extends Component {
           </div>
           <button onClick={this.getMatches}>get matches</button>
           <button onClick={this.getLikes}>get likes</button>
+          <button onClick={this.getRooms}>get rooms</button>
         </main>
       </div>
     )

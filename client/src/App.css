@@ -320,6 +320,16 @@ html {
   background-color: black;
 }
 
+.close {
+  margin-left: 3rem;
+  border: 1px solid white;
+  width: 3rem;
+  height: 3rem;
+  background-color: maroon;
+  color: white;
+  font-size: 2.5rem;
+}
+
 .modal-header {
   font-size: 24px;
 }
@@ -364,6 +374,7 @@ html {
   color: white;
   border: 1px solid #5BC037;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .upcoming-row {

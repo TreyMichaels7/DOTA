@@ -29,7 +29,7 @@ export class NavBar extends Component {
               </div>
               <div className={this.state.expanded ? "expanded" : "hidden"}>
                 <Link className="nav-links" to="/profile">Profile</Link>
-                <Link className="nav-links" to="/home">Notifications</Link>
+                <Link className="nav-links" to="/home">Home</Link>
                 <span onClick={this.props.signOut}>
                     <span className="nav-links" >Sign Out</span>
                 </span>
@@ -115,7 +115,7 @@ const ProfileModal = (props) => {
     <div>
       <Button className="edit-button" onClick={toggle}>{buttonLabel}</Button>
       <Modal isOpen={modal} toggle={toggle} className={className}>
-        <ModalHeader className="edit-button" toggle={toggle}></ModalHeader>
+        <ModalHeader className="modal-escape" toggle={toggle}></ModalHeader>
         <ModalBody>
             <div className="profile-main">
               <div className="profile-block">
