@@ -70,7 +70,7 @@ const getRoomHandler = async (req, res, { Room }) => {
 const getRoomIdHandler = async (req, res, { Room }) => {
     // let xUser = req.get("X-User");
     let user = {
-        id: 5,
+        id: 1,
         email: "kelden222@test.com",
         userName: "kelden222",
         firstName: "kelden",
@@ -98,7 +98,12 @@ const getRoomIdHandler = async (req, res, { Room }) => {
                 res.status(500).send("There was an issue getting the room.");
                 return;
             }
-            console.log(currRoom.users);
+            if (!currRoom) {
+                // room doesn't exist
+                res.sendFile(path.join(__dirname, '../..', "/public/unauthorized.html"));
+                return;
+            }
+
             if (currRoom.users.includes(creator.id)) {
                 res.sendFile(path.join(__dirname, '../..', "/public/"));
                 return;

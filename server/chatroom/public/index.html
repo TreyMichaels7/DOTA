@@ -46,14 +46,65 @@
 
         window.onload = (e) => {
             // document.getElementById("local-id").play();
-            document.getElementById("mute").onclick = () => {
-                console.log("mute");
-            };
+            // document.getElementById("mute").onclick = () => {
+            //     console.log("mute");
+            // };
 
             document.getElementById("end-call").onclick = () => {
                 console.log("end");
-                open(location, '_self').close();
+
+                let loc = window.location.href.split("/");
+                let roomid = loc[loc.length - 1];
+                console.log(roomid);
+                fetch("http://localhost/v1/room/" + roomid, {
+                    method: "DELETE",
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(console.log)
+                    .then(open(location, '_self').close())
+                    .catch ((error) => {
+                    console.log(error);
+                    return;
+                });
             };
+        }
+
+        // Countdown for the call
+        function startTimer() {
+            var distance = 1000 * 60 * 7; // 7 minutes
+            var x = setInterval(() => {
+                distance -= 1000;
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                document.getElementById("timer").innerHTML = minutes + "min " + seconds + "s";
+
+                // If the count down is finished, write some text 
+                if (distance < 0) {
+                    clearInterval(x);
+                    let loc = window.location.href.split("/");
+                    let roomid = loc[loc.length - 1];
+                    console.log(roomid);
+                    fetch("http://localhost/v1/room/" + roomid, {
+                        method: "DELETE",
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then()
+                        .then(console.log)
+                        .catch((error) => {
+                            console.log(error);
+                            return;
+                        });
+
+                    alert("Call has been ended");
+                    open(location, '_self').close();
+                }
+            }, 1000);
         }
 
         // Init
@@ -277,6 +328,7 @@
             if (show) {
                 logo.classList.add("top-right");
                 activeUsers.style.display = "none";
+                startTimer();
             } else {
                 logo.classList.remove("top-right");
                 activeUsers.style.display = "block";
@@ -286,6 +338,10 @@
     </script>
 
     <style>
+        body {
+            background: darkgray;
+        }
+
         #remote-container {
             display: none;
             position: absolute;
@@ -377,11 +433,11 @@
 </head>
 
 <body>
-    <h1 id="logo">Dating on the Ave</h1>
+    <h1 id="logo"><span>Time Left: <span id="timer">You'll be given 7 minutes</span></span><br /> Dating on the Ave</h1>
     <div class="video-button-container">
-        <div class="video-button" id="mute">Mute</div>
+        <!-- <div class="video-button" id="mute">Mute</div> -->
         <div class="video-button" id="end-call">End Call</div>
-        <div class="video-button" id="share">Share Contact</div>
+        <!-- <div class="video-button" id="share">Share Contact</div> -->
     </div>
     <div id="remote-container">
         <p>Them (<span id="remote-id"></span>)</p>
