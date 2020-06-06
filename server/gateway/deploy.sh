@@ -32,7 +32,9 @@ docker run -d --network dotaNetwork --name mongoDb mongo
 
 sleep 10s
 
-docker run --name chatroomSrv --network dotaNetwork -d -v /etc/letsencrypt:/etc/letsencrypt:ro  -e TLSCERT=$TLSCERT -e TLSKEY=$TLSKEY keldenl/dotachatroom
+# docker run --name chatroomSrv --network dotaNetwork -d -v /etc/letsencrypt:/etc/letsencrypt:ro  -e TLSCERT=$TLSCERT -e TLSKEY=$TLSKEY keldenl/dotachatroom
+
+docker run --name chatroomSrv --network dotaNetwork -d -v /etc/letsencrypt:/etc/letsencrypt:ro  keldenl/dotachatroom
 
 docker run --name dotaGateway -d -p 443:443 --network dotaNetwork --restart unless-stopped  -v /etc/letsencrypt:/etc/letsencrypt:ro -e ADDR=:443  -e TLSCERT=$TLSCERT -e TLSKEY=$TLSKEY -e SESSIONKEY=$SESSIONKEY -e DSN=$DSN -e REDISADDR=$REDISADDR keldenl/dotagateway:latest
 

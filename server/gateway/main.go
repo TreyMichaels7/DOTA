@@ -81,7 +81,7 @@ func main() {
 	chatroomDirector := func(r *http.Request) {
 		r.Host = "chatroomSrv" // name of the docker instance running
 		r.URL.Host = "chatroomSrv"
-		r.URL.Scheme = "https"
+		r.URL.Scheme = "http"
 		r.Header.Del("X-User")
 
 		currSession := &handlers.SessionState{}
