@@ -1,0 +1,136 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 0;
+    margin: 0;
+    background-color: #181818;
+    color: #fff;
+    border-top: 5px solid rgb(233,30,99);
+}
+
+#logo {
+    text-align: center;
+    margin-top: 100px;
+}
+
+#dota {
+    font-family: "Courgette",cursive;
+}
+
+#active-users {
+    text-align: center;
+}
+
+#join-call {
+    background-color: rgba(233,30,99,.75);
+    font-weight: 600;
+    border-radius: 2.5px;
+    padding: 10px 20px;
+    display: inline-block;
+    transition: .2s ease-in-out;
+    cursor: pointer;
+}
+
+#join-call:hover {
+    background-color: rgba(233,30,99,.9);
+}
+
+.disabled-btn {
+    background-color: rgba(233,30,99,.3) !important;
+    color: #aaa;
+    cursor: default!important;
+}
+
+.disabled-btn:hover {
+    background-color: rgba(233,30,99,.3) !important;
+}
+
+#remote-container {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+#remote-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#remote-container>p {
+    position: absolute;
+    left: 10;
+    top: 0;
+    color: white;
+}
+
+#local-container #local-video {
+    position: absolute;
+    right: 10;
+    bottom: 10;
+    width: 25%;
+    max-width: 300px;
+    border-radius: 5px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    -moz-transform: scale(-1, 1);
+    -webkit-transform: scale(-1, 1);
+    -o-transform: scale(-1, 1);
+    transform: scale(-1, 1);
+    filter: FlipH;
+}
+
+#local-container>p {
+    position: absolute;
+    bottom: 0;
+    right: 20;
+    z-index: 1;
+    color: white;
+}
+
+.top-right {
+    color: white;
+    opacity: .5;
+    position: absolute;
+    top: 10;
+    right: 20;
+    margin: 0!important;
+}
+
+.video-button-container {
+    z-index: 10;
+    position: absolute;
+    bottom: 10;
+    left: 20;
+    display: none;
+}
+
+.video-button {
+    padding: 10px 30px;
+    border-radius: 40px;
+    color: white;
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 1.25em;
+    font-weight: 600;
+}
+
+.video-button:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+#mute {
+    background-color: #a2a2a2;
+}
+
+#end-call {
+    background-color: #f6665c;
+}
+
+#share {
+    background-color: #03a9f4;
+}

@@ -65,7 +65,7 @@ const getMatchHandler = async (req, res, { Match }) => {
         console.log(currUser);
 
         if (!currUser) {
-            res.status(400).send("That user has no matches");
+            res.status(202).send("That user has no matches");
             return;
         } else {
             res.json(currUser);
@@ -123,7 +123,7 @@ const deleteMatchHandler = async (req, res, { Match }) => {
             }
 
             res.type('text');
-            res.send("successfully deleted!");
+            res.status(202).send("successfully deleted!");
         });
     });
 };

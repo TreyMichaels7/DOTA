@@ -1,6 +1,8 @@
 // Package imports
 const mongoose = require('mongoose');
 const fs = require("fs");
+const path = require('path');
+
 const express = require('express');
 const socketIO = require("socket.io");
 // const https = require("https"); // HTTPS
@@ -63,6 +65,9 @@ async function main() {
     //     res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type, X-User, x-user');
     //     next();
     // });
+
+    app.use("/room/style", express.static(path.join(__dirname, '/..', "/public/style")));
+    app.use("/room/js", express.static(path.join(__dirname, '/..', "/public/js")));
 
     // Endpoints
     app.get("/room/:roomid", RequestWrapper(getRoomIdHandler, { Room }));

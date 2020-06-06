@@ -56,7 +56,6 @@ const postLikeHandler = async (req, res, { Match }) => {
                 });
             } else {
                 let newMatch = { userId: userId };
-                console.log("I'M STILL RUNIN G FOR SOME REASON!");
                 if (!currMatch) {
                     let likesArray = [];
                     likesArray.push(matchId);
@@ -106,7 +105,7 @@ const getLikeHandler = async (req, res, { Match }) => {
         console.log(currUser);
 
         if (!currUser) {
-            res.status(400).send("That user has no likes");
+            res.status(202).send("That user has no likes");
             return;
         } else {
             res.json(currUser);
@@ -154,7 +153,7 @@ const deleteLikeHandler = async (req, res, { Match }) => {
             }
 
             res.type('text');
-            res.send("successfully deleted the like!");
+            res.status(202).send("successfully deleted the like!");
         });
     });
 };
