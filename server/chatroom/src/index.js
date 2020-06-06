@@ -26,7 +26,7 @@ const options = { // HTTPS
 const port = 443; // HTTPS
 // const port = 80; // HTTP
 // const mongoEndpoint = "mongodb://localhost:27017/test"; // LOCAL TESTING
-const mongoEndpoint = "mongodb://mongodemo:27017/test"; // DEPLOY
+const mongoEndpoint = "mongodb://mongoDb:27017/test"; // DEPLOY
 // console.log(options);
 
 // Set up Express
