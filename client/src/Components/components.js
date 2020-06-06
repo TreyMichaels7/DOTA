@@ -177,7 +177,7 @@ export class UpcomingRow extends Component {
     return (
       <div className='upcoming-row'>
         <div>{this.props.name || "loading"}</div>
-        <div><a href={"https://chatroom.kelden.me/room/" + this.props.chatroom} className="chatroom-button">Go To Chatroom</a></div>
+        <div><a href={"https://api.kelden.me/room/" + this.props.chatroom} className="chatroom-button">Go To Chatroom</a></div>
       </div>
     )
   }

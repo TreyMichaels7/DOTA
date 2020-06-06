@@ -1,3 +1,4 @@
+npm run build
 docker build --no-cache -t keldenl/dotaclient .
 docker push keldenl/dotaclient
 

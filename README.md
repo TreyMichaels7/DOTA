@@ -274,7 +274,7 @@ User Cases and Priority:
 Architecture Diagram
 --------------------
 
-![](https://lh6.googleusercontent.com/P1cxXjsSD6R6MKoBzPi_KSAi_e7KK6hus9scsQAgxZ5L6UWeMWep4LB9BYFRa5OmEDWjyW6ShXMpwV0Mh8NGrOrIsI40rX4Ia1ffKRT61P0kCH9bmxyd5lmOUtgINiJ7GZp7DJ1i)
+![](diagram.png)
 
 Database Schema (MYSQL, but may do messages in MongoDB as microservice json schema)
 -----------------------------------------------------------------------------------
