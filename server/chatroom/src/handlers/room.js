@@ -68,24 +68,24 @@ const getRoomHandler = async (req, res, { Room }) => {
 }
 
 const getRoomIdHandler = async (req, res, { Room }) => {
-    // let xUser = req.get("X-User");
-    let user = {
-        id: 1,
-        email: "kelden222@test.com",
-        userName: "kelden222",
-        firstName: "kelden",
-        lastName: "test",
-        gender: 1,
-        sexuality: 2
-    };
+    // let xUser = req.get("x-User");
+    // let user = {
+    //     id: 1,
+    //     email: "kelden222@test.com",
+    //     userName: "kelden222",
+    //     firstName: "kelden",
+    //     lastName: "test",
+    //     gender: 1,
+    //     sexuality: 2
+    // };
 
-    let xUser = JSON.stringify(user);
-    if (!xUser) {
-        res.status(401).send("User must be logged in TO CALL.");
-        return;
-    }
+    // let xUser = JSON.stringify(user);
+    // if (!xUser) {
+    //     res.status(401).send("User must be logged in TO CALL.");
+    //     return;
+    // }
 
-    let creator = JSON.parse(xUser);
+    // let creator = JSON.parse(xUser);
 
     if (!req.params.roomid) {
         res.status(400).send("No roomid provided");
@@ -102,16 +102,19 @@ const getRoomIdHandler = async (req, res, { Room }) => {
                 // room doesn't exist
                 res.sendFile(path.join(__dirname, '../..', "/public/unauthorized.html"));
                 return;
+            } else {
+                res.sendFile(path.join(__dirname, '../..', "/public/"));
+                return
             }
 
-            if (currRoom.users.includes(creator.id)) {
-                res.sendFile(path.join(__dirname, '../..', "/public/"));
-                return;
-            } else {
-                // Unauthorized, take them to a "lost" page
-                res.sendFile(path.join(__dirname, '../..', "/public/unauthorized.html"));
-                return;
-            }
+            // if (currRoom.users.includes(creator.id)) {
+            //     res.sendFile(path.join(__dirname, '../..', "/public/"));
+            //     return;
+            // } else {
+            //     // Unauthorized, take them to a "lost" page
+            //     res.sendFile(path.join(__dirname, '../..', "/public/unauthorized.html"));
+            //     return;
+            // }
         });
     } catch (e) {
         res.status(500).send("Room with that ID does not exist.");

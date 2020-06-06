@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -82,20 +81,20 @@ func main() {
 		r.Host = "chatroomSrv" // name of the docker instance running
 		r.URL.Host = "chatroomSrv"
 		r.URL.Scheme = "http"
-		r.Header.Del("X-User")
+		// r.Header.Del("X-User")
 
-		currSession := &handlers.SessionState{}
-		// Check if the user is authenticated
-		_, authErr := sessions.GetState(r, hctx.SigningKey, hctx.SessionStore, currSession)
-		if authErr != nil {
-			return
-		}
+		// currSession := &handlers.SessionState{}
+		// // Check if the user is authenticated
+		// _, authErr := sessions.GetState(r, hctx.SigningKey, hctx.SessionStore, currSession)
+		// if authErr != nil {
+		// 	return
+		// }
 
-		userHeader, err := json.Marshal(currSession.User)
-		if err != nil {
-			return
-		}
-		r.Header.Add("X-User", string(userHeader))
+		// userHeader, err := json.Marshal(currSession.User)
+		// if err != nil {
+		// 	return
+		// }
+		// r.Header.Add("X-User", string(userHeader))
 	}
 
 	chatroomRevProxy := &httputil.ReverseProxy{Director: chatroomDirector}
@@ -108,12 +107,13 @@ func main() {
 	mux.HandleFunc("/v1/sessions", hctx.SessionsHandler)
 	mux.HandleFunc("/v1/sessions/", hctx.SpecificSessionHandler)
 
+	mux.Handle("/", chatroomRevProxy)
 	mux.Handle("/v1/matches", chatroomRevProxy)
 	mux.Handle("/v1/likes", chatroomRevProxy)
 	mux.Handle("/v1/upcoming", chatroomRevProxy)
 	mux.Handle("/v1/room", chatroomRevProxy)
-	mux.Handle("/v1/room/:roomid", chatroomRevProxy)
-	mux.Handle("/room/:roomid", chatroomRevProxy)
+	mux.Handle("/v1/room/{roomid}", chatroomRevProxy)
+	mux.Handle("/room/{roomid}", chatroomRevProxy)
 
 	wrappedMux := handlers.NewCORS(mux)
 

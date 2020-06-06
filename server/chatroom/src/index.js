@@ -56,13 +56,13 @@ const RequestWrapper = (handler, SchemaAndDbForwarder) => {
 }
 
 async function main() {
-    app.all('*', function (req, res, next) {
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Credentials', true);
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, X-User, x-user');
-        next();
-    });
+    // app.all('*', function (req, res, next) {
+    //     res.header('Access-Control-Allow-Origin', '*');
+    //     res.header('Access-Control-Allow-Credentials', true);
+    //     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+    //     res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type, X-User, x-user');
+    //     next();
+    // });
 
     // Endpoints
     app.get("/room/:roomid", RequestWrapper(getRoomIdHandler, { Room }));

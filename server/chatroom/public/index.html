@@ -56,7 +56,7 @@
                 let loc = window.location.href.split("/");
                 let roomid = loc[loc.length - 1];
                 console.log(roomid);
-                fetch("http://localhost/v1/room/" + roomid, {
+                fetch("https://api.kelden.me/v1/room/" + roomid, {
                     method: "DELETE",
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
@@ -87,7 +87,7 @@
                     let loc = window.location.href.split("/");
                     let roomid = loc[loc.length - 1];
                     console.log(roomid);
-                    fetch("http://localhost/v1/room/" + roomid, {
+                    fetch("https://api.kelden.me/v1/room/" + roomid, {
                         method: "DELETE",
                         headers: {
                             'Accept': 'application/json, text/plain, */*',
@@ -108,7 +108,7 @@
         }
 
         // Init
-        var socket = io.connect('https://chatroom.kelden.me/');
+        var socket = io.connect('https://api.kelden.me/');
         // var socket = io.connect('http://localhost:80/');
 
         // Turn Server

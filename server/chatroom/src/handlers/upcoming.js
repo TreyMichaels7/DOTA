@@ -1,5 +1,5 @@
 const getUpcomingHandler = async (req, res, { Room }) => {
-    let xUser = req.get("X-User");
+    let xUser = req.get("x-user");
     if (!xUser) {
         res.status(401).send("User must be logged in to view upcoming calls.");
         return;
