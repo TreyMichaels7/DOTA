@@ -116,8 +116,8 @@ Endpoints
             -   Content-Type: application/json
         -   Body: 
 
-            -   userId: int
-            -   matchId: int
+            -   "userId": int
+            -   "matchId": int
         -   Status Codes:
 
             -   201 - Successfully liked someone! Match id added to your likes
@@ -135,8 +135,8 @@ Endpoints
             -   Content-Type: application/json
         -   Body:
 
-            -   userId: int
-            -   matchId: int
+            -   "userId": int
+            -   "matchId": int
         -   Status Codes
 
             -   200 - Successfully removed user from likes
@@ -166,8 +166,8 @@ Endpoints
             -   Content-Type: application/json
         -   Body: 
 
-            -   userId: int
-            -   matchId: int
+            -   "userId": int
+            -   "matchId": int
         -   Status Codes:
 
             -   201 - Match id added to your matches
@@ -182,8 +182,8 @@ Endpoints
             -   Content-Type: application/json
         -   Body: 
 
-            -   userId: int
-            -   matchId: int
+            -   "userId": int
+            -   "matchId": int
         -   Status Codes:
 
             -   200 - Successfully removed match
