@@ -96,12 +96,6 @@ func (hc *HandlerContext) SpecificUserHandler(w http.ResponseWriter, r *http.Req
 		json.NewEncoder(w).Encode(user)
 		return
 	} else if r.Method == "PATCH" {
-		/*
-		if idVal != sessionState.User.ID {
-			http.Error(w, "Error, status forbidden", http.StatusForbidden)
-			return
-		}
-		*/
 		ctype := r.Header.Get("Content-Type")
 		if !strings.HasPrefix(ctype, "application/json") {
 			http.Error(w, "Request body must be in JSON", http.StatusUnsupportedMediaType)

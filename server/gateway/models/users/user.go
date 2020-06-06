@@ -8,10 +8,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-//gravatarBasePhotoURL is the base URL for Gravatar image requests.
-//See https://id.gravatar.com/site/implement/images/ for details
-const gravatarBasePhotoURL = "https://www.gravatar.com/avatar/"
-
 //bcryptCost is the default bcrypt cost to use when hashing passwords
 var bcryptCost = 13
 
@@ -102,9 +98,6 @@ func (nu *NewUser) ToUser() (*User, error) {
 
 //FullName returns the user's full name, in the form:
 // "<FirstName> <LastName>"
-//If either first or last name is an empty string, no
-//space is put between the names. If both are missing,
-//this returns an empty string
 func (u *User) FullName() string {
 	return u.FirstName + " " + u.LastName
 }
