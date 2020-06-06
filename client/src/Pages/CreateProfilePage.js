@@ -33,10 +33,12 @@ export class CreateProfilePage extends Component {
       this.setState({
           [event.target.name]: val
       });
-      if (this.state.firstName !== "" && this.state.lastName !== "" && this.state.email !== "" && this.state.password !== "") {
-        this.setState({
-          completed: true
-        });
+      if (this.state.firstName !== "" && this.state.lastName !== "" && this.state.password !== "") {
+        if (this.state.email.includes("@uw.edu")) {
+          this.setState({
+            completed: true
+          });
+        } 
       } else {
         this.setState({
           completed: false
@@ -52,7 +54,7 @@ export class CreateProfilePage extends Component {
     submitForm = async (e) => {
       if (!this.state.completed) {
         e.preventDefault();
-        alert("Error! Some required fields were not completed");
+        alert("Error! Some required fields were not completed or is not a UW email");
       } else {
   
         const { 
