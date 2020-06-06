@@ -1,6 +1,6 @@
 export default {
     base: "https://api.kelden.me",
-    testbase: "https://api.kelden.me",
+    testbase: "http://localhost:443",
     handlers: {
         signUp: "/v1/users",
         userInfo: "/v1/users/",

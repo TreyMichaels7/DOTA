@@ -3,6 +3,9 @@ import { Redirect, Link } from 'react-router-dom';
 import { Form, FormGroup, Label, Input } from 'reactstrap';
 import api from '../Constants/APIEndpoints';
 
+/*
+  Page where the logged in user can edit their profile information, 
+*/
 export class EditProfilePage extends Component {
   
     constructor(props) {
@@ -17,6 +20,10 @@ export class EditProfilePage extends Component {
   
     }
   
+    /*
+      Handles the change of a specific input field value and 
+      alters the component state equal to that value
+    */
     handleChange = (event) => {
       let val = event.target.value;
       this.setState({
@@ -24,7 +31,10 @@ export class EditProfilePage extends Component {
       });
     }
   
-    
+    /*
+      Makes a GET Request to update the current user's information locally if successful.
+      Otherwise it returns an error.
+    */
     updateStorage = async (id) => {
       console.log(api.testbase + api.handlers.userInfo + id);
       const response = await fetch(api.testbase + api.handlers.userInfo + id, {
@@ -46,7 +56,10 @@ export class EditProfilePage extends Component {
       this.setState({submitted: true});
     }
     
-  
+    /*
+      Updates the User information with a PATCH Request which takes in a user's info for
+      the request body, if update fails an alert is provided to the user.
+    */
     updateUser = async (e) => {
       let getUser = JSON.parse(localStorage.getItem("User"));
       const {
@@ -80,8 +93,6 @@ export class EditProfilePage extends Component {
         photoURL
       }
   
-      console.log(api.testbase + api.handlers.userInfo + getUser['id']);
-      console.log(localStorage.getItem("Authorization"));
       const response = await fetch(api.testbase + api.handlers.userInfo + getUser['id'], {
         method: "PATCH",
         body: JSON.stringify(sendData),
@@ -97,14 +108,13 @@ export class EditProfilePage extends Component {
         return;
       }
   
-      const update = await response.json();
-      console.log(update);
-      console.log("Updated!");
       this.updateStorage(getUser['id']);
     }
   
   
-  
+    /*
+      If user is not logged in, redirects to the landing sign-in page. Otherwise enables a user to edit their information.
+    */
     render() {
       if (!this.props.loggedIn) {
         return <Redirect to = '/' />;

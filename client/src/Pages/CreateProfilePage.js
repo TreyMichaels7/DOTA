@@ -3,6 +3,9 @@ import { Redirect, Link } from 'react-router-dom';
 import { Form, FormGroup, Label, Input } from 'reactstrap';
 import api from '../Constants/APIEndpoints';
 
+/*
+  Page where a new user can create their own profile. 
+*/
 export class CreateProfilePage extends Component {
   
     constructor(props) {
@@ -20,6 +23,11 @@ export class CreateProfilePage extends Component {
       }
     }
   
+    /*
+      Handles the change of a specific input field value and 
+      alters the component state equal to that value.
+      Will also check to ensure that all required fields are completed.
+    */
     handleChange = (event) => {
       let val = event.target.value;
       this.setState({
@@ -36,6 +44,11 @@ export class CreateProfilePage extends Component {
       }
     }
   
+    /*
+      Submits a form that contains all the required information needed in order to generate a new user account.
+      If not all the required forms are filled, the user will be notified and have to continue filling out the fields.
+      Otherwise, they will be notified their account was successfully created and they will be redirected to the home page.
+    */
     submitForm = async (e) => {
       if (!this.state.completed) {
         e.preventDefault();
@@ -102,6 +115,9 @@ export class CreateProfilePage extends Component {
       }
     }
   
+    /*
+      If user is logged in, redirects to the home page. Otherwise it displays the page to create a new user account.
+    */
     render() {
       if (this.props.loggedIn) {
         return <Redirect to = '/home' />;

@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { NavBar } from '../Components/components';
 import { Redirect, Link } from 'react-router-dom';
 
+/*
+  Page where a logged in user can view their own profile details.
+*/
 export class ProfilePage extends Component {
 
     constructor(props) {
@@ -17,6 +20,10 @@ export class ProfilePage extends Component {
       this.setGenderAndSexuality();
     }
   
+    /*
+      Sets the gender and sexuality values based on the numerical 
+      value a user has stored for both gender and sexuality.
+    */
     setGenderAndSexuality = () => {
       if (this.state.user.gender === 1) {
         this.setState({gender: "Male"});
@@ -25,7 +32,6 @@ export class ProfilePage extends Component {
       } else {
         this.setState({gender: "Other"});
       }
-      console.log(this.state.gender);
   
       if (this.state.user.sexuality === 1) {
         this.setState({sexuality: "Men"});
@@ -34,9 +40,12 @@ export class ProfilePage extends Component {
       } else {
         this.setState({sexuality: "other"});
       }
-      console.log(this.state.sexuality);
     }
     
+    /*
+      If user is logged out, redirects to the landing sign-in page. 
+      Other wise it displays the personal profile page.
+    */
     render() {
       
       if (!this.props.loggedIn) {

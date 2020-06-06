@@ -2,6 +2,9 @@ import React, { Component, useState, Fragment } from 'react';
 import { Button,  Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
+/*
+  Navigation bar seen for logged in users.
+*/
 export class NavBar extends Component {
 
     constructor(props){
@@ -39,6 +42,11 @@ export class NavBar extends Component {
     }
 }
 
+
+/*
+  Holds a potential match's name, and button to see their complete profile page.
+  Also enables users to like or dislike their current potential matches.
+*/
 export class MatchCard extends Component {
     constructor(props) {
       super(props);
@@ -85,6 +93,9 @@ export class MatchCard extends Component {
     }
 }
 
+/*
+  Modal acts as a profile viewing page for other users that displays all their public information.
+*/
 const ProfileModal = (props) => {
   const {
     buttonLabel,
@@ -151,6 +162,9 @@ const ProfileModal = (props) => {
   );
 }
 
+/*
+  Displays a user's name that you have both mutually liked as well as a link to your chatroom with them.
+*/
 export class UpcomingRow extends Component {
   constructor(props) {
     super(props);
@@ -169,6 +183,9 @@ export class UpcomingRow extends Component {
   }
 }
 
+/*
+  Displays a user's name that you have liked.
+*/
 export class PendingRow extends Component {
   constructor(props) {
     super(props);
